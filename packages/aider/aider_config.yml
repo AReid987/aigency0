@@ -1,0 +1,30 @@
+# Aider Configuration File
+
+# Ollama settings
+model: deepseek-coder-v2
+ollama_url: ${OLLAMA_BASE_URL}
+
+# Editor settings
+use_git: true
+auto_commits: true
+commit_message_prefix: "[Aider] "
+
+# Input/output settings
+input_history_file: .aider.input.history
+chat_history_file: .aider.chat.history
+
+# Behavior settings
+pretty: true
+verbose: false
+stream: true
+dirty_commits: false
+auto_push: false
+
+# Context settings
+context_limit: 2000
+
+# Function calling settings
+use_functions: true
+
+# Model settings
+weak_model: mistral-nemo:latest

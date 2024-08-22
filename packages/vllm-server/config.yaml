@@ -1,0 +1,16 @@
+models:
+# *TODO - replace models
+
+# gpt-3.5-turbo: /path/to/gpt-3.5-turbo-model
+# gpt-4: /path/to/gpt-4-model
+
+logging:
+  level: INFO
+  file: /path/to/logfile.log
+
+monitoring:
+  enabled: true
+  prometheus_port: 8001
+
+auth:
+  enabled: false # Set to true when ready to implement authentication

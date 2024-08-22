@@ -1,0 +1,94 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Virtual Environments
+venv/
+env/
+.venv/
+.env/
+agentZeroVenv/
+aiderEnv/
+packages/agent-zero/agentZeroVenv/
+packages/aider/aiderEnv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# Build Outputs
+.next/
+out/
+build
+dist
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.DS_Store
+*.pem
+Thumbs.db
+
+philosophy.md
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.iml
+
+# Config files
+config.toml
+
+# Log files
+logs/
+*.log
+
+# Testing
+/coverage/
+
+# Db
+db.sqlite
+.aider*
+
+aider/work_dir
+agent-zero/work_dir
+
+.packages
+
+# models

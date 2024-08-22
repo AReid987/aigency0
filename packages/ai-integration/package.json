@@ -1,0 +1,13 @@
+{
+  "name": "@repo/ai-integration",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/agent-zero": "workspace:*",
+    "@repo/aider": "workspace:*"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  }
+}
