@@ -89,7 +89,7 @@ This simulated group interview gives us a starting point for understanding poten
 |   User      |   Q1   |   Q2   |   Q3   |   Q4   |   Q5   |
 |  ---------  |  ----  |  ----  |  ----  |  ----  |  ----  |
 |   Sarah     |   5    |   3    |   2    |   5    |   4    |
-|   Michael   |   4    |   3    |   4    |   4    |   3    |
+|   Mchael   |   4    |   3    |   4    |   4    |   3    |
 |   Emma      |   5    |   4    |   3    |   5    |   4    |
 |   Alex      |   5    |   3    |   2    |   5    |   5    |
 |   Olivia    |   4    |   3    |   3    |   5    |   5    |

@@ -1,5 +1,8 @@
-# Use multi-platform support
-# Builds the Docker image using the latest PyTorch base image, with support for multiple platforms.
-FROM --platform=linux/arm64 pytorch/pytorch:latest
+# Use a multi-arch base image
+FROM --platform=$TARGETPLATFORM pytorch/pytorch:latest
 
+# Install vLLM
 RUN pip install vllm
+
+# Set the entrypoint
+ENTRYPOINT ["python", "-m", "vllm.entrypoints.openai.api_server"]
