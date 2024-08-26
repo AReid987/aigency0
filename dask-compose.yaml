@@ -1,0 +1,24 @@
+# docker compose -f dask-compose.yml up -d
+services:
+  # The Dask scheduler service is responsible for coordinating the execution of tasks
+  # across the Dask worker nodes. It listens for incoming connections on ports 8786
+  # and 8787, which are used for the Dask client and web UI, respectively.
+  scheduler:
+
+    image: daskdev/dask
+    platform: ${BUILDPLATFORM:-linux/arm64}
+    ports:
+    - "8786:8786"
+    - "8787:8787"
+    command: ["dask-scheduler"]
+
+  # The Dask worker service is responsible for executing tasks assigned by the Dask
+  # scheduler. It connects to the scheduler on the `tcp://scheduler:8786` address
+  # and listens for incoming tasks to process. The worker service is dependent on
+  # the scheduler service being available.
+  worker-tessara:
+    image: daskdev/dask
+    platform: ${BUILDPLATFORM:-linux/arm64}
+    command: ["dask-worker", "tcp://scheduler:8786"]
+    depends_on:
+    - scheduler

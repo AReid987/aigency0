@@ -34,7 +34,7 @@ ollama serve
 export OLLAMA_API_BASE=http://127.0.0.1:11434 # Mac/Linux
 setx   OLLAMA_API_BASE http://127.0.0.1:11434 # Windows, restart shell after setx
 
-aider --model ollama/llama3:70b 
+aider --model ollama/llama3:70b
 ```
 
 See the [model warnings](warnings.html)

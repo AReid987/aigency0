@@ -2,13 +2,13 @@
 
 Use the Design Spec Sheet when starting to analyze the product specification at hand.
 
-  
+
 
 * * *
 
 Provide the company logo, company name, name of the main contributor, and date created here.
 
-  
+
 
 * * *
 
@@ -16,7 +16,7 @@ Provide the company logo, company name, name of the main contributor, and date c
 
 # <COMPANY NAME>
 
-  
+
 
 #### Prepared by:
 
@@ -24,19 +24,19 @@ Provide the company logo, company name, name of the main contributor, and date c
 
 * * *
 
-  
+
 
 # 📱Product Description
 
 Provide the description and specification of the product being designed.
 
-  
+
 
 The product is a mobile device that offers basic communication features such as text, call, and mobile surfing. Additional features are **128 Gb** RAM, Super Retina XDR display, 6.1‑inch (diagonal) all‑screen OLED display, **2532‑by‑1170**\-pixel resolution at 460 PPI, **12 MP** front camera, and **4K** Video recording.
 
 ![](https://t20542222.p.clickup-attachments.com/t20542222/58da0195-2c92-4bbd-9010-ab0f2a85dd17/Untitled%20design%20(8).png)
 
-  
+
 
 # 📊 Market Competition
 
@@ -44,11 +44,11 @@ Provide an overview of the top competitors in the market.
 
 You can add online references below and place them as bookmarks.
 
-  
+
 
 The current market share is at **12%** with major competitors. Information is as seen below:
 
-  
+
 
 [
 
@@ -60,7 +60,7 @@ Welcome to ClickUp University!
 
 ](https://university.clickup.com/?utm_source=google&utm_medium=cpc&utm_campaign=gs_cpc_at_nnc_aw_trial_all-devices_maxclicks_lp_x_all-departments_clickup-university&utm_content=mc%20|%20phrase%20|%20text%20|%20brand%20|%20university&utm_term=p_clickup%20university&gclid=CjwKCAjwwo-WBhAMEiwAV4dybSIW2e8qIKLyoxEkc6ZWd_1Ugh39Q3HsbY-_pCu68j1uJRVQM608jBoCsZAQAvD_BwE)
 
-  
+
 
 [
 
@@ -72,13 +72,13 @@ Live demos and webinars from the creators of ClickUp. Speak with a platform expe
 
 ](https://clickup.com/webinars)
 
-  
+
 
 # 🎯 Purpose of Review
 
 Provide reason for conducting design review.
 
-  
+
 
 **This review has been triggered by three main issues:**
 
@@ -86,19 +86,19 @@ Provide reason for conducting design review.
 
 ![](https://t20542222.p.clickup-attachments.com/t20542222/5fe89e3c-d494-48c0-9d6c-3898194a09fc/2.png)
 
-  
 
-  
+
+
 
 _Competitor D continuously cannibalizes the market share for the same product specification._
 
 * * *
 
-  
 
-  
 
-  
+
+
+
 
 _Customers are looking for major improvements in the aesthetic design._
 
@@ -108,21 +108,21 @@ _Customers are looking for major improvements in the aesthetic design._
 
 ![](https://t20542222.p.clickup-attachments.com/t20542222/1a515359-9f25-4364-a2cc-5eaba643d6c7/Competitor%20D%20(1).png)
 
-  
 
-  
+
+
 
 _The market aspires to technological advancement that adapts to the current work-from-home setup, especially with the use of mobile devices._
 
 * * *
 
-  
+
 
 # ✅ Addressing the Issues
 
 Provide reason for conducting design review.
 
-  
+
 
 | **Issue No.** | **Description** | **Resolution** | **Required Output** |
 | ---| ---| ---| --- |
@@ -130,7 +130,7 @@ Provide reason for conducting design review.
 | 2 | Customers are looking for major improvements in the aesthetic design. | Conduct a market survey on the 60% demographical composition of the market | Summary and evaluation of the market survey |
 | 3 | The market aspires to technological advancement that adapts to the current work-from-home setup, especially with the use of mobile devices. | Conduct market analysis on the work-from-home environment to understand product adaptation | Summary and evaluation of the market analysis |
 
-  
+
 
 * * *
 

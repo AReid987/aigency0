@@ -1,0 +1,8 @@
+[tool.poetry]
+name = "aigency"
+authors = ["Adam Kabak", "Antonio Reid"]
+version = "0.1.0"
+description = "Become augmented. Make weakness your leverage. Collaborate with AI."
+
+[tool.poetry.dependencies]
+python = "^3.11"

@@ -1,0 +1,5 @@
+# Use multi-platform support
+# Builds the Docker image using the latest PyTorch base image, with support for multiple platforms.
+FROM --platform=linux/arm64 pytorch/pytorch:latest
+
+RUN pip install vllm

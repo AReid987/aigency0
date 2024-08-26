@@ -1,5 +1,13 @@
 {
   "name": "aigency",
+  "authors": [
+    {
+      "name": "Adam Kabak"
+    },
+    {
+      "name": "Antonio Reid"
+    }
+  ],
   "private": true,
   "scripts": {
     "build": "turbo build",
@@ -22,5 +30,8 @@
       "ip@=2.0.0": ">=2.0.1",
       "braces@<3.0.3": ">=3.0.3"
     }
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.25.0"
   }
 }

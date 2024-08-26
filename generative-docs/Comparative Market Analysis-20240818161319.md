@@ -2,7 +2,7 @@
 
 A Comparative Market Analysis (CMA) determines the price of a house using recently sold, comparable properties in the neighborhood.
 
-  
+
 
 * * *
 
@@ -10,7 +10,7 @@ A Comparative Market Analysis (CMA) determines the price of a house using recent
 
 # <COMPANY NAME>
 
-  
+
 
 #### Prepared by:
 
@@ -20,37 +20,37 @@ A Comparative Market Analysis (CMA) determines the price of a house using recent
 
 * * *
 
-  
+
 
 ## 📈 Market Overview
 
 Define in this section the market situation of the current year.
 
-  
+
 
 According to Fannie Mae economists, prices would rise by an average of 16% in the upcoming quarter compared to last year's period. According to MBA economists, home price increases are anticipated for the near future. According to their predictions, prices will rise annually by 9.8% in 2022 compared to 2021 and 2.8% in 2023.
 
-  
 
-  
+
+
 
 ## ⭐ Scope
 
 Provide here the scope of this analysis.
 
-  
+
 
 The Comparative Market Analysis is done based on the market price and conducted surveys to various realtors.
 
-  
 
-  
+
+
 
 ## 🔎 Analysis Summary
 
 Fill out the table below with the details per options you have defined on the succeeding subpages.
 
-  
+
 
 | Option | A | B | C |
 | ---| ---| ---| --- |
@@ -72,13 +72,13 @@ Fill out the table below with the details per options you have defined on the su
 | Basement | Finished | Unfinished | Finished |
 | Other Features | 1 Fireplace | No Fireplace | No fireplace |
 
-  
+
 
 ## 🏆 Results & Recommendations
 
 Provide in the text box below the result of your analysis and your recommendation.
 
-  
+
 
 | <br><br><br> |
 | --- |
