@@ -18,7 +18,8 @@ services:
     image: nginx
     network_mode: service:tailscale-authkey
   dask-scheduler:
-    image: daskdev/dask
+    image: twgsportsclub/dask-docker-arm64
+    platform: linux/arm64
     ports:
       - "${DASK_SCHEDULER_PORT:-8786}:8786"
       - "${DASK_DASHBOARD_PORT:-8787}:8787"
@@ -26,7 +27,8 @@ services:
     networks:
       - aigency-net
   dask-worker:
-    image: daskdev/dask
+    image: twgsportsclub/dask-docker-arm64
+    platform: linux/arm64
     command: ["dask-worker", "tcp://dask-scheduler:8786"]
     depends_on:
       - dask-scheduler
@@ -41,7 +43,16 @@ services:
       dockerfile: Dockerfile.vllm
     ports:
       - "${VLLM_PORT:-8000}:8000"
-    command: ["python", "-m", "vllm.entrypoints.api_server", "--model", "${VLLM_MODEL:-facebook/opt-125m}", "--host", "0.0.0.0"]
+    command:
+      [
+        "python",
+        "-m",
+        "vllm.entrypoints.api_server",
+        "--model",
+        "${VLLM_MODEL:-facebook/opt-125m}",
+        "--host",
+        "0.0.0.0",
+      ]
     deploy:
       replicas: ${VLLM_INSTANCES:-1}
     networks:
@@ -51,8 +62,7 @@ volumes:
     driver: local
 networks:
   aigency-net:
-    driver: overlay
-
+    driver: bridge
 #   ollama:
 #     image: ollama/ollama:latest
 #     ports:
