@@ -37,7 +37,7 @@ services:
     networks:
       - aigency-net
   vllm:
-    image: vllm-server
+    image: twgsportsclub/vllm
     build:
       context: ./packages/vllm-server
       dockerfile: Dockerfile.vllm
@@ -63,6 +63,7 @@ volumes:
 networks:
   aigency-net:
     driver: bridge
+
 #   ollama:
 #     image: ollama/ollama:latest
 #     ports:
