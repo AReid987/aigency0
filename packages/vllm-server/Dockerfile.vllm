@@ -1,8 +1,30 @@
-# Use a multi-arch base image
-FROM --platform=$TARGETPLATFORM pytorch/pytorch:latest
+# Python 3.11 ARM64 compatible base image
+FROM python:3.11-slim-bullseye
 
-# Install vLLM
-RUN pip install vllm
+# Set working directory
+WORKDIR /app
 
-# Set the entrypoint
-ENTRYPOINT ["python", "-m", "vllm.entrypoints.openai.api_server"]
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+	build-essential \
+	git \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Install PyTorch and vLLM
+RUN pip install --no-cache-dir torch torchvision torchaudio vllm
+
+# Install deepseek-coder-v2 model
+RUN python -c "from vllm import LLM; LLM.from_pretrained('deepseek-ai/deepseek-coder-6.7b-instruct')",
+
+# Set the command to run the API server
+CMD ["python", "-m", "vllm.entrypoints.api_server", "--model", "deepseek-ai/deepseek-coder-6.7b-instruct", "--host", "0.0.0.0"]
+
+# O.G. Image
+# # Use a multi-arch base image
+# FROM --platform=$TARGETPLATFORM pytorch/pytorch:latest
+
+# # Install vLLM
+# RUN pip install vllm
+
+# # Set the entrypoint
+# ENTRYPOINT ["python", "-m", "vllm.entrypoints.openai.api_server"]

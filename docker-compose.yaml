@@ -36,34 +36,33 @@ services:
       replicas: ${DASK_WORKERS:-1}
     networks:
       - aigency-net
-  vllm:
-    image: twgsportsclub/vllm
-    build:
-      context: ./packages/vllm-server
-      dockerfile: Dockerfile.vllm
-    ports:
-      - "${VLLM_PORT:-8000}:8000"
-    command:
-      [
-        "python",
-        "-m",
-        "vllm.entrypoints.api_server",
-        "--model",
-        "${VLLM_MODEL:-facebook/opt-125m}",
-        "--host",
-        "0.0.0.0",
-      ]
-    deploy:
-      replicas: ${VLLM_INSTANCES:-1}
-    networks:
-      - aigency-net
 volumes:
   tailscale-authkey:
     driver: local
 networks:
   aigency-net:
     driver: bridge
+      - aigency-net
 
+
+
+# vllm:
+#   image: twgsportsclub/vllm
+#   build:
+#     context: ./packages/vllm-server
+#     dockerfile: Dockerfile.vllm
+#   ports:
+#     - "${VLLM_PORT:-8000}:8000"
+#   environment:
+#     - VLLM_MODEL=deepseek-ai/deepseek-coder-6.7b-instruct
+#   deploy:
+#     resources:
+#       limits:
+#         memory: 16G
+#       reservations:
+#         memory: 12G
+#   networks:
+#     - aigency-net
 #   ollama:
 #     image: ollama/ollama:latest
 #     ports:
