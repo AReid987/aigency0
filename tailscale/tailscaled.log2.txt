@@ -1,0 +1,23 @@
+{"logtail":{"client_time":"2024-08-28T05:13:44.458759794Z","proc_id":1095775775,"proc_seq":275},"metrics":"I1602I3002I3a02I3c02I3e02I263cI4404I4802I4a3cI4c3cI4e1eI501eI523cI561eI581e","text":"tailscaled got signal terminated; shutting down\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.459443877Z","proc_id":1095775775,"proc_seq":276},"text":"canceling captive portal context\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.460306919Z","proc_id":1095775775,"proc_seq":277},"text":"control: client.Shutdown ...\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.461213669Z","proc_id":1095775775,"proc_seq":278},"v":1,"text":"control: authRoutine: context done.\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.461432294Z","proc_id":1095775775,"proc_seq":279},"text":"control: authRoutine: exiting\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.461926294Z","proc_id":1095775775,"proc_seq":280},"v":1,"text":"control: PollNetMap: context canceled\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.462350836Z","proc_id":1095775775,"proc_seq":281},"text":"control: mapRoutine: exiting\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.462600794Z","proc_id":1095775775,"proc_seq":282},"text":"control: updateRoutine: exiting\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.463068127Z","proc_id":1095775775,"proc_seq":283},"text":"control: Client.Shutdown done.\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.464023127Z","proc_id":1095775775,"proc_seq":284},"text":"magicsock: closing connection to derp-9 (conn-close), age 10m28s\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.464208711Z","proc_id":1095775775,"proc_seq":285},"text":"magicsock: 0 active derp conns\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.464379377Z","proc_id":1095775775,"proc_seq":286},"v":1,"text":"control: HostInfo: {\"IPNVersion\":\"1.72.1-tf4a95663c\",\"BackendLogID\":\"1d6382a249ec02166f1fd7b80e4cdb7388307472f6d4297fd874b401cdf09658\",\"OS\":\"linux\",\"OSVersion\":\"6.10.0-linuxkit\",\"Container\":true,\"Distro\":\"alpine\",\"DistroVersion\":\"3.18.8\",\"Desktop\":false,\"Package\":\"container\",\"Hostname\":\"aigency-tailnet\",\"Machine\":\"aarch64\",\"GoArch\":\"arm64\",\"GoVersion\":\"go1.22.5\",\"RoutableIPs\":[\"10.0.0.0/8\"],\"Services\":[{\"Proto\":\"tcp\",\"Port\":80},{\"Proto\":\"tcp\",\"Port\":111},{\"Proto\":\"tcp\",\"Port\":2377},{\"Proto\":\"tcp\",\"Port\":7946},{\"Proto\":\"tcp\",\"Port\":61139},{\"Proto\":\"tcp\",\"Port\":65495},{\"Proto\":\"peerapi-dns-proxy\",\"Port\":1}],\"Userspace\":true,\"UserspaceRouter\":true,\"AppConnector\":false}\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.464611919Z","proc_id":1095775775,"proc_seq":287},"v":1,"text":"warning: fakeRouter.Close: not implemented.\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.465019586Z","proc_id":1095775775,"proc_seq":288},"v":2,"text":"wg: Device closing\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.465605961Z","proc_id":1095775775,"proc_seq":289},"v":2,"text":"wg: Routine: receive incoming receiveDERP - stopped\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.465755419Z","proc_id":1095775775,"proc_seq":290},"text":"Receive func ReceiveIPv6 exiting with error: *net.OpError, read udp [::]:58689: raw-read udp6 [::]:58689: use of closed network connection\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.466139877Z","proc_id":1095775775,"proc_seq":291},"v":2,"text":"wg: Routine: receive incoming mkReceiveFunc - stopped\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.466295211Z","proc_id":1095775775,"proc_seq":292},"text":"Receive func ReceiveIPv4 exiting with error: *net.OpError, read udp 0.0.0.0:57047: raw-read udp4 0.0.0.0:57047: use of closed network connection\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.466565627Z","proc_id":1095775775,"proc_seq":293},"v":2,"text":"wg: Routine: receive incoming mkReceiveFunc - stopped\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.466859211Z","proc_id":1095775775,"proc_seq":294},"v":2,"text":"wg: [aTKkr] - Stopping\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.467008877Z","proc_id":1095775775,"proc_seq":295},"v":2,"text":"wg: Device closed\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.467612877Z","proc_id":1095775775,"proc_seq":296},"text":"flushing log.\n"}
+{"logtail":{"client_time":"2024-08-28T05:13:44.467807627Z","proc_id":1095775775,"proc_seq":297},"text":"logger closing down\n"}

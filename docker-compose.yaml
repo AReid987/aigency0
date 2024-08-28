@@ -1,52 +1,91 @@
 services:
-  tailscale-authkey:
+  tailscale:
     image: tailscale/tailscale:latest
-    container_name: tailscale-authkey
-    hostname: tailscale-docker
+    container_name: tailscale
+    hostname: aigency-tailnet
+    volumes:
+      - ./tailscale:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
     environment:
       - TS_AUTHKEY=tskey-auth-kn4443UWS611CNTRL-TX74yvREWSAbjeZLKmFySAh7RggBFZ5XP
       - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-    volumes:
-      - tailscale-authkey:/var/lib/tailscale
-      - /dev/net/tun:/dev/net/tun
-    cap_add:
-      - net_admin
-      - sys_module
+      - TS_ROUTES=10.0.0.0/8
+      - TS_EXTRA_ARGS=--hostname=aigency-tailnet
+    network_mode: host
     restart: unless-stopped
-  nginx-authkey:
+  nginx:
     image: nginx
-    network_mode: service:tailscale-authkey
+    hostname: nginx
+    network_mode: service:tailscale
   dask-scheduler:
     image: twgsportsclub/dask-docker-arm64
     platform: linux/arm64
-    ports:
-      - "${DASK_SCHEDULER_PORT:-8786}:8786"
-      - "${DASK_DASHBOARD_PORT:-8787}:8787"
     command: ["dask-scheduler"]
-    networks:
-      - aigency-net
+    network_mode: service:tailscale
+    hostname: dask-scheduler
   dask-worker:
     image: twgsportsclub/dask-docker-arm64
     platform: linux/arm64
-    command: ["dask-worker", "tcp://dask-scheduler:8786"]
+    command: ["dask-worker", "tcp://dask-scheduler.tailnet:8786"]
     depends_on:
       - dask-scheduler
     deploy:
       replicas: ${DASK_WORKERS:-1}
-    networks:
-      - aigency-net
+    network_mode: service:tailscale
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ./ollama-models:/root/.ollama
+    network_mode: service:tailscale
   aider:
     image: paulgauthier/aider-full
-    ports:
-      - "7777:7777"
+    pull_policy: always
+    volumes:
+      - .:/app
+    environment:
+      # - GROQ_API_KEY=${GROQ_API_KEY}
+      - OLLAMA_API_BASE=http://ollama.tailnet:11434
+      - MLX_API_BASE=http://mlx.tailnet:5000
+      - LLM_API_URL=http://mlx.tailnet:5000/generate
+    depends_on:
+      - ollama
+      - mlx
+    command: --cache-prompts --gui --model ollama/deepseek-coder-v2
+    network_mode: service:tailscale
+    hostname: aider
+  mlx:
+    build:
+      context: ./packages/mlx
+      dockerfile: Dockerfile.mlx
+    environment:
+      - USE_MLX=true
+    volumes:
+      - ./packages/MLX/mlx:/app/mlx
+      - ./models:/models
+      - mlx-build:/app/mlx
+    command: python /app/mlx/server.py
+    network_mode: service:tailscale
+    hostname: mlx
+  pytorch:
+    build:
+      context: ./packages/pytorch
+      dockerfile: Dockerfile.pytorch
+    volumes:
+      - .:/app
+    environment:
+      - USE_MLX=false
+    command: python server.py
 volumes:
-  tailscale-authkey:
-    driver: local
-networks:
-  aigency-net:
-    driver: bridge
-      - aigency-net
+  mlx-build:
+#   tailscale:
+#     driver: local
+# networks:
+#   aigency-net:
+#     driver: bridge
+#       - aigency-net
 
 
 

@@ -122,7 +122,8 @@ CMD ["python", "app.py"]
 
 MLX Dockerfile
 
-`FROM node:14
+```
+FROM node:14
 
 # Install dependencies
 RUN npm install
