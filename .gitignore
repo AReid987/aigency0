@@ -90,3 +90,4 @@ agent-zero/work_dir
 .packages
 
 # models
+models/

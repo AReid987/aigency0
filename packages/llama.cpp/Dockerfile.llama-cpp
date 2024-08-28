@@ -1,0 +1,68 @@
+# # Base image with C++ support
+# FROM ubuntu:22.04
+
+# # Install dependencies
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     cmake \
+#     git \
+#     libopenblas-dev \
+#     liblapack-dev \
+#     libomp-dev \
+#     wget \
+#     curl
+
+# # Set up working directory
+# WORKDIR /app
+
+# # Clone Llama.cpp repository
+# RUN git clone https://github.com/ggerganov/llama.cpp.git .
+
+# # Build Llama.cpp
+# RUN mkdir build && cd build && \
+#     cmake .. && \
+#     make && \
+#     ls -l /app/build/src
+    
+#     # ls -l /app/build/bin && \
+#     # ls -l /app/build/src
+
+
+
+# # Set up entrypoint
+# ENTRYPOINT ["/app/build/src/llama.cpp"]
+
+# # Default command
+# CMD ["--help"]
+
+
+# Base image with C++ support
+FROM ubuntu:22.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    libopenblas-dev \
+    liblapack-dev \
+    libomp-dev \
+    wget \
+    curl
+
+# Set up working directory
+WORKDIR /app
+
+# Copy the llama.cpp source code into the container
+COPY . /app
+
+# Build Llama.cpp
+RUN mkdir build && cd build && \
+    cmake .. && \
+    make
+
+# Set the entrypoint to the LLaMA executable
+ENTRYPOINT ["/app/build/bin/llama"]
+
+# Default command
+CMD ["--help"]

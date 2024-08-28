@@ -36,6 +36,61 @@ services:
       replicas: ${DASK_WORKERS:-1}
     networks:
       - aigency-net
+
+  llama-cpp:
+    # build:
+    #   context: ./packages/llama.cpp # Adjust the path as needed
+    #   dockerfile: Dockerfile.llama-cpp
+    # ports:
+    #   - "9000:9000" # Example port mapping; adjust as needed
+    # networks:
+    #   - aigency-net
+    # # volumes:
+    # #   - ./data:/app/data # Mount any data or model files if needed
+    # # environment:
+    # # - MODEL_PATH=/app/data/llama-model.bin # Example environment variable for model path
+    # restart: unless-stopped
+
+    # image: ghcr.io/ggerganov/llama.cpp:full
+    # volumes:
+    #   - /path/to/models:/models
+    # entrypoint: ["/bin/bash", "-c"]
+    # command: |
+    #   "if [ ! -f /models/7B/ggml-model-q4_0.gguf ]; then
+    #      echo 'Downloading and converting models...';
+    #      /usr/local/bin/llama --all-in-one /models/ 7B;
+    #    fi;
+    #    echo 'Running the model...';
+    #    /usr/local/bin/llama --run -m /models/7B/ggml-model-q4_0.gguf -p 'Building a website can be done in 10 simple steps:' -n 512;"
+
+    image: ghcr.io/ggerganov/llama.cpp:full
+    # platforms:
+    #   - linux/amd64
+    #   - linux/arm64
+    volumes:
+      - ./packages/llama.cpp:/app
+      # - ./packages/llama.cpp/models:/models
+
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["/bin/bash", "/app/start_llama.sh"]
+    # command: ["/bin/bash", "/packages/llama.cpp/start_llama.sh"]
+
+    # command: |
+    #   if [ ! -f /models/7B/ggml-model-q4_0.gguf ]; then
+    #     echo 'Downloading and converting models...';
+    #     /usr/local/bin/llama --all-in-one /models/ 7B;
+    #   fi;
+    #   echo 'Running the model...';
+    #   /usr/local/bin/llama --run -m /models/7B/ggml-model-q4_0.gguf -p 'Building a website can be done in 10 simple steps:' -n 512;
+
+    # command: |
+    #   if [ ! -f /models/7B/ggml-model-q4_0.gguf ]; then
+    #     echo 'Downloading and converting models...';
+    #     /usr/local/bin/llama --all-in-one /models/ 7B;
+    #   fi;
+    #   echo 'Running the model...';
+    #   /usr/local/bin/llama --run -m /models/7B/ggml-model-q4_0.gguf -p 'Building a website can be done in 10 simple steps:' -n 512;
+
   aider:
     image: paulgauthier/aider-full
     ports:
@@ -47,9 +102,6 @@ networks:
   aigency-net:
     driver: bridge
       - aigency-net
-
-
-
 # vllm:
 #   image: twgsportsclub/vllm
 #   build:
