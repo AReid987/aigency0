@@ -36,6 +36,10 @@ services:
       replicas: ${DASK_WORKERS:-1}
     networks:
       - aigency-net
+  aider:
+    image: paulgauthier/aider-full
+    ports:
+      - "7777:7777"
 volumes:
   tailscale-authkey:
     driver: local
