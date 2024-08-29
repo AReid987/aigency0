@@ -1,3 +1,12 @@
+# """
+# Dockerfile for the LLaMA server application.
+#
+# This Dockerfile builds upon the LLaMA cpp full image and sets up a Python 3.11
+# environment with the necessary dependencies for running a server application.
+# It installs the required Python packages from the requirements.txt file, copies
+# the server.py file, and sets the entry point to run the server.py script.
+# """
+
 # Use the llama.cpp full image as the base
 FROM ghcr.io/ggerganov/llama.cpp:full as llama_cpp_base
 
