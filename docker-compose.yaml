@@ -90,27 +90,18 @@ services:
   #   echo 'Running the model...';
   #   /usr/local/bin/llama --run -m /models/7B/ggml-model-q4_0.gguf -p 'Building a website can be done in 10 simple steps:' -n 512;
 
-  # llama-cpp:
-  #   image: ghcr.io/ggerganov/llama.cpp:full
-  #   volumes:
-  #     - ./packages/llama.cpp:/app
-
-  #   entrypoint: ["/bin/bash", "-c"]
-  #   command: ["/bin/bash", "/app/start_llama.sh"]
-
   llama-cpp:
-    image: llama-cpp-server:latest # The tag for the custom-built image
+    image: llama-cpp-server:latest
     build:
       context: ./packages/llama.cpp
       dockerfile: Dockerfile.llama-cpp
     ports:
-      - "5001:5001" # Map port 5000 of the container to port 5000 on the host
+      - "5001:5001"
     volumes:
-      - ./packages/llama.cpp/models:/models # Mount the models directory
+      - ./packages/llama.cpp/models:/models
     environment:
-      - FLASK_ENV=development # Set Flask environment to production
-    restart: unless-stopped # Restart policy
-
+      - FLASK_ENV=development
+    restart: unless-stopped
   aider:
     image: paulgauthier/aider-full
     ports:
