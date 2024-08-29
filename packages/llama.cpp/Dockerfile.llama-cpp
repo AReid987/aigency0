@@ -1,3 +1,41 @@
+# # # Base image with C++ support
+# # FROM ubuntu:22.04
+
+# # # Install dependencies
+# # RUN apt-get update && apt-get install -y \
+# #     build-essential \
+# #     cmake \
+# #     git \
+# #     libopenblas-dev \
+# #     liblapack-dev \
+# #     libomp-dev \
+# #     wget \
+# #     curl
+
+# # # Set up working directory
+# # WORKDIR /app
+
+# # # Clone Llama.cpp repository
+# # RUN git clone https://github.com/ggerganov/llama.cpp.git .
+
+# # # Build Llama.cpp
+# # RUN mkdir build && cd build && \
+# #     cmake .. && \
+# #     make && \
+# #     ls -l /app/build/src
+    
+# #     # ls -l /app/build/bin && \
+# #     # ls -l /app/build/src
+
+
+
+# # # Set up entrypoint
+# # ENTRYPOINT ["/app/build/src/llama.cpp"]
+
+# # # Default command
+# # CMD ["--help"]
+
+
 # # Base image with C++ support
 # FROM ubuntu:22.04
 
@@ -15,54 +53,240 @@
 # # Set up working directory
 # WORKDIR /app
 
-# # Clone Llama.cpp repository
-# RUN git clone https://github.com/ggerganov/llama.cpp.git .
+# # Copy the llama.cpp source code into the container
+# COPY . /app
 
 # # Build Llama.cpp
 # RUN mkdir build && cd build && \
 #     cmake .. && \
-#     make && \
-#     ls -l /app/build/src
-    
-#     # ls -l /app/build/bin && \
-#     # ls -l /app/build/src
+#     make
 
+# # Set the entrypoint to the LLaMA executable
+# # ENTRYPOINT ["/app/build/bin/llama"]
 
-
-# # Set up entrypoint
-# ENTRYPOINT ["/app/build/src/llama.cpp"]
+# CMD ["/usr/local/bin/start_llama.sh"]
 
 # # Default command
-# CMD ["--help"]
+# # CMD ["--help"]
 
 
-# Base image with C++ support
-FROM ubuntu:22.04
+# COPY ./start_llama.sh /usr/local/bin/start_llama.sh
+# RUN chmod +x /usr/local/bin/start_llama.sh
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    git \
-    libopenblas-dev \
-    liblapack-dev \
-    libomp-dev \
-    wget \
-    curl
 
-# Set up working directory
+
+
+# ========================
+# ========================
+
+# FROM ubuntu:22.04 AS builder
+
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     cmake \
+#     git
+
+# WORKDIR /app
+# RUN git clone https://github.com/ggerganov/llama.cpp.git && \
+#     cd llama.cpp && \
+#     make
+
+# FROM python:3.11-slim-bullseye
+
+# COPY --from=builder /app/llama.cpp /app/llama.cpp
+# WORKDIR /app
+
+# RUN pip install flask requests
+
+# COPY server.py .
+
+# CMD ["python", "server.py"]
+
+
+# ========================
+# ========================
+
+# FROM ghcr.io/ggerganov/llama.cpp:full
+
+# # Install Python and virtual environment tools
+# RUN apt-get update && apt-get install -y python3-pip python3-venv
+
+# # Set up the working directory
+# WORKDIR /app
+
+# # Create and activate a virtual environment
+# RUN python3 -m venv venv
+# ENV PATH="/app/venv/bin:$PATH"
+
+# # Copy and install Python dependencies in the virtual environment
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Copy the server script
+# COPY server.py .
+
+# # Define the command to run the server
+# CMD ["python", "server.py"]
+
+# ========================
+# ========================
+
+# # Start with the Python 3.11 slim image as the base
+# FROM python:3.11-slim as base
+
+# # Install the necessary packages for building llama.cpp
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     cmake \
+#     git
+
+# # Clone and build llama.cpp
+# WORKDIR /app
+# RUN git clone https://github.com/ggerganov/llama.cpp.git && \
+#     cd llama.cpp && \
+#     make
+
+# # Set up the final image
+# FROM python:3.11-slim
+
+# # Copy the built llama.cpp files from the base image
+# COPY --from=base /app/llama.cpp /app/llama.cpp
+
+# # Install Python dependencies
+# WORKDIR /app
+# RUN pip install --upgrade pip && \
+#     pip install -r requirements.txt
+
+# # Copy your server script
+# COPY server.py .
+
+# # Set the command to run the Flask server
+# CMD ["python", "server.py"]
+
+
+
+# ===========================
+# ===========================
+
+# # Start with the Python 3.11 slim image as the base
+# FROM python:3.11-slim as base
+
+# # Install the necessary packages for building llama.cpp
+# RUN apt-get update && apt-get install -y \
+#     build-essential \
+#     cmake \
+#     git
+
+# # Clone and build llama.cpp
+# WORKDIR /app
+# RUN git clone https://github.com/ggerganov/llama.cpp.git && \
+#     cd llama.cpp && \
+#     make
+
+# # Set up the final image
+# FROM python:3.11-slim
+
+# # Copy the built llama.cpp files from the base image
+# COPY --from=base /app/llama.cpp /app/llama.cpp
+
+# # Set up a virtual environment
+# WORKDIR /app
+# RUN python -m venv venv
+
+# # Activate the virtual environment and install Python dependencies
+# RUN venv/bin/pip install --upgrade pip && \
+#     venv/bin/pip install -r llama.cpp/requirements.txt
+
+# # Copy your server script
+# COPY server.py .
+
+# # Set environment variable to ensure the virtual environment is used
+# ENV PATH="/app/venv/bin:$PATH"
+
+# # Set the command to run the Flask server
+# CMD ["python", "server.py"]
+
+
+
+# ===========================
+# ===========================
+# ===========================
+# ===========================
+
+
+
+# # Use the llama.cpp full image as the base
+# FROM ghcr.io/ggerganov/llama.cpp:full as llama_cpp_base
+
+# # Set environment variable to make installations non-interactive
+# ENV DEBIAN_FRONTEND=noninteractive
+# ENV TZ=America/New_York  
+
+# # Install Python 3.11 and other necessary packages
+# RUN apt-get update && \
+#     apt-get install -y \
+#     software-properties-common && \
+#     add-apt-repository ppa:deadsnakes/ppa && \
+#     apt-get update && \
+#     apt-get install -y python3.11 python3.11-venv python3.11-dev python3-pip && \
+#     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
+#     update-alternatives --set python3 /usr/bin/python3.11
+
+# # Set the working directory
+# WORKDIR /app
+
+# # Create a virtual environment
+# RUN python3 -m venv venv
+
+# # Activate the virtual environment and install dependencies
+# RUN /bin/bash -c "source venv/bin/activate && pip install --upgrade pip && pip install flask requests"
+
+# # Copy the server script into the container
+# COPY server.py .
+
+# # # Set the environment variable for the PATH to include the virtual environment
+# # ENV PATH="/app/venv/bin:$PATH"
+
+# # Set the command to activate the virtual environment and run the Flask server
+# CMD ["/bin/bash", "-c", "source venv/bin/activate && python server.py"]
+
+
+# ==============================
+# ==============================
+# ==============================
+
+# Use the llama.cpp full image as the base
+FROM ghcr.io/ggerganov/llama.cpp:full as llama_cpp_base
+
+# Set environment variable to make installations non-interactive
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=America/New_York  
+
+# Install Python 3.11 and other necessary packages
+RUN apt-get update && \
+    apt-get install -y \
+    software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.11 python3.11-venv python3.11-dev python3-pip && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
+    update-alternatives --set python3 /usr/bin/python3.11
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the llama.cpp source code into the container
-COPY . /app
+# Create a virtual environment
+RUN python3 -m venv venv
 
-# Build Llama.cpp
-RUN mkdir build && cd build && \
-    cmake .. && \
-    make
+# Activate the virtual environment and install dependencies
+RUN /bin/bash -c "source venv/bin/activate && pip install --upgrade pip && pip install flask requests"
 
-# Set the entrypoint to the LLaMA executable
-ENTRYPOINT ["/app/build/bin/llama"]
+# Copy the server script into the container
+COPY server.py .
 
-# Default command
-CMD ["--help"]
+# Set the environment variable for the PATH to include the virtual environment
+ENV PATH="/app/venv/bin:$PATH"
+
+# Set the command to activate the virtual environment and run the Flask server
+ENTRYPOINT ["python3", "server.py"]
+# CMD ["python3", "server.py"]
