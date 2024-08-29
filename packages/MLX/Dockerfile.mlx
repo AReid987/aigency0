@@ -1,0 +1,25 @@
+# """
+# Dockerfile for the MLX server application.
+
+# This Dockerfile sets up a Python 3.11 environment with the necessary dependencies
+# for running the MLX server application. It installs the required Python packages
+# from the requirements.txt file, copies the server.py file, and sets the entry point
+# to run the server.py script.
+# """
+
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	build-essential \
+	&& rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app/mlx
+
+# Install other dependencies
+
+COPY packages/MLX/requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "server.py"]

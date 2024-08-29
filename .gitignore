@@ -1,5 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 # Virtual Environments
+**venv/
+**Venv/
+**.venv/
+**.Venv/
+**.env
+**env/
 venv/
 env/
 .venv/
@@ -8,7 +14,8 @@ agentZeroVenv/
 aiderEnv/
 packages/agent-zero/agentZeroVenv/
 packages/aider/aiderEnv/
-
+packages/MLX/mlxVenv
+packages/agent-zero/work_dir
 # Python
 __pycache__/
 *.py[cod]
@@ -32,7 +39,7 @@ node_modules
 .pnp.js
 
 # Local env files
-.env
+# .env
 .env.local
 .env.development.local
 .env.test.local
@@ -82,8 +89,6 @@ logs/
 
 # Db
 db.sqlite
-.aider*
-
 aider/work_dir
 agent-zero/work_dir
 
@@ -91,3 +96,37 @@ agent-zero/work_dir
 
 # models
 models/
+
+
+# aider
+aider.code-workspace
+*.pyc
+.aider*
+aider_chat.egg-info/
+Gemfile.lock
+_site
+.jekyll-cache/
+.jekyll-metadata
+
+# agent-zero
+**/.DS_Store
+**/.env
+**/__pycache__/
+
+# Ignore all contents of the virtual environment directory
+.venv/*
+
+# Ignore all contents of the directory "work_dir"
+work_dir/*
+# But do not ignore the directory itself
+!work_dir/.gitkeep
+
+# Ignore all contents of the directory "memory"
+memory/*
+# But do not ignore the directory itself
+!memory/.gitkeep
+
+# Ignore all contents of the directory "logs"
+logs/*
+# But do not ignore the directory itself
+!logs/.gitkeep
