@@ -18,14 +18,14 @@ services:
     restart: unless-stopped
   nginx:
     image: nginx
-    networks
-  - aigency-network
+    networks:
+      - aigency-network
   dask-scheduler:
     image: twgsportsclub/dask-docker-arm64
     platform: linux/arm64
     command: ["dask", "scheduler"]
-    networks
-  - aigency-network
+    networks:
+      - aigency-network
   dask-worker:
     image: twgsportsclub/dask-docker-arm64
     platform: linux/arm64
@@ -34,14 +34,14 @@ services:
       - dask-scheduler
     deploy:
       replicas: ${DASK_WORKERS:-1}
-    networks
-  - aigency-network
+    networks:
+      - aigency-network
   ollama:
     image: ollama/ollama
     volumes:
       - ./ollama-models:/root/.ollama
-    networks
-  - aigency-network
+    networks:
+      - aigency-network
     command: ollama serve
   aider:
     image: paulgauthier/aider-full
@@ -56,24 +56,8 @@ services:
     depends_on:
       - ollama
     command: sh -c "sleep 10 && aider --cache-prompts --gui --model ollama/deepseek-coder-v2"
-    networks
-  - aigency-network
-  # mlx_api:
-  #   build:
-  #     context: ./packages/MLX
-  #     dockerfile: Dockerfile.mlx
-  #   volumes:
-  #     - ./packages/MLX:/app
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   environment:
-  #     - MLX_HOST=host.docker.internal
-  #     - USE_MLX=${USE_MLX:-false}
-  #   command: sh /app/start_mlx_proxy.sh
-  #   network_mode: host
-  #   extra_hosts:
-  #     - "host.docker.internal:host-gateway"
-  #   depends_on:
-  #     - tailscale
+    networks:
+      - aigency-network
   pytorch:
     build:
       context: ./packages/pytorch
@@ -86,6 +70,7 @@ services:
 networks:
   aigency-network:
     driver: bridge
+
   # coder:
   #   # This MUST be stable for our documentation and
   #   # other automations.
@@ -111,33 +96,27 @@ networks:
   #   depends_on:
   #     database:
   #       condition: service_healthy
-  database:
-    # Minimum supported version is 13.
-    # More versions here: https://hub.docker.com/_/postgres
-    image: "postgres:16"
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-username} # The PostgreSQL user (useful to connect to the database)
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password} # The PostgreSQL password (useful to connect to the database)
-      POSTGRES_DB: ${POSTGRES_DB:-coder} # The PostgreSQL default database (automatically created at first launch)
-    volumes:
-      - coder_data:/var/lib/postgresql/data # Use "docker volume rm coder_coder_data" to reset Coder
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-username} -d ${POSTGRES_DB:-coder}",
-        ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-volumes:
-  mlx-build:
-  coder_data:
-
-
-
+# database:
+#     # Minimum supported version is 13.
+#     # More versions here: https://hub.docker.com/_/postgres
+#     image: "postgres:16"
+#     ports:
+#       - "5432:5432"
+#     environment:
+#       POSTGRES_USER: ${POSTGRES_USER:-username} # The PostgreSQL user (useful to connect to the database)
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password} # The PostgreSQL password (useful to connect to the database)
+#       POSTGRES_DB: ${POSTGRES_DB:-coder} # The PostgreSQL default database (automatically created at first launch)
+#     volumes:
+#       - coder_data:/var/lib/postgresql/data # Use "docker volume rm coder_coder_data" to reset Coder
+#     healthcheck:
+#       test:
+#         [
+#           "CMD-SHELL",
+#           "pg_isready -U ${POSTGRES_USER:-username} -d ${POSTGRES_DB:-coder}",
+#         ]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
 #   tailscale:
 #     driver: local
 # networks:
@@ -159,7 +138,7 @@ volumes:
 #       - ./shared/:app/shared
 #     command: python /app/mlx/server.py
 #     networks
-  - aigency-network
+  # - aigency-network
 #     hostname: mlx
 # vllm:
 #   image: twgsportsclub/vllm
