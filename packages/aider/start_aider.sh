@@ -10,7 +10,7 @@ echo "Git status:"
 git status
 
 # Initialize Ollama and pull the model
-# /init-ollama.sh
+/init-ollama.sh
 
 docker compose pull
 docker compose build mlx

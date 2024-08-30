@@ -1,12 +1,14 @@
-import Image from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
-
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
+    <div className="min-h-screen bg-blue-500">
+      <main>
+        <div>
+          <h1>
+            <span>Aigency</span>
+          </h1>
+        </div>
+
+        {/* <Image
           className={styles.logo}
           src="/next.svg"
           alt="Next.js logo"
@@ -45,13 +47,13 @@ export default function Home() {
           >
             Read our docs
           </a>
-        </div>
-        <Button appName="docs" className={styles.secondary}>
+        </div> */}
+        {/* <Button appName="docs" className={styles.secondary}>
           Open alert
-        </Button>
+        </Button> */}
       </main>
-      <footer className={styles.footer}>
-        <a
+      <footer>
+        {/* <a
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
@@ -92,7 +94,7 @@ export default function Home() {
             height={16}
           />
           Go to nextjs.org →
-        </a>
+        </a> */}
       </footer>
     </div>
   );

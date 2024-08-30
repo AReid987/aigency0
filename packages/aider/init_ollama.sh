@@ -17,15 +17,15 @@ done
 echo "Ollama is ready. Checking for model..."
 
 # Check if the model already exists
-# if curl -s http://ollama:11434/api/tags | grep -q "deepseek-coder-v2:latest"; then
-if curl -s http://ollama:11434/api/tags | grep -q "codellama:7b"; then
-	# echo "Model deepseek-coder-v2:latest already exists. Skipping download."
-	echo "Model codellama:7b already exists. Skipping download."
+if curl -s http://aigency-tailnet:11434/api/pull | grep -q "deepseek-coder-v2:latest"; then
+	# if curl -s http://ollama:11434/api/tags | grep -q "codellama:7b"; then
+	echo "Model deepseek-coder-v2:latest already exists. Skipping download."
+	# echo "Model codellama:7b already exists. Skipping download."
 else
-	# echo "Model not found. Starting download of deepseek-coder-v2:latest (approx. 8.9 GB)..."
-	echo "Model not found. Starting download of codellama:7b (approx. 8.9 GB)..."
+	echo "Model not found. Starting download of deepseek-coder-v2:latest (approx. 8.9 GB)..."
+	# echo "Model not found. Starting download of codellama:7b (approx. 8.9 GB)..."
 	echo "This may take a while depending on your internet speed."
-	curl -X POST http://ollama:11434/api/pull -d '{"name": "codellama:7b"}' |
+	curl -X POST http://ollama:11434/api/pull -d '{"name": "deepseek-coder-v2:7b"}' |
 		while read -r line; do
 			echo "$line" | jq -r '. | "\(.completed // 0)/\(.total // 0) bytes (\((.completed // 0) * 100 / (.total // 1))%)"'
 		done

@@ -1,4 +1,8 @@
 # Notes
+## Phone call with Jonny
+
+- Personalized space to interact with a personal assistant
+- theme derived from set of choices i.e. sets of images, user chooses preferred image a few times, theme generated based on choices
 
 ## Comparing Blackbox and Amazon Q for multi file code generation
 ## Amazon Q

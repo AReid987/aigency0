@@ -10,6 +10,7 @@ venv/
 env/
 .venv/
 .env/
+aigencyVenv/
 agentZeroVenv/
 aiderEnv/
 packages/agent-zero/agentZeroVenv/
@@ -128,3 +129,4 @@ memory/*
 logs/*
 # But do not ignore the directory itself
 !logs/.gitkeep
+ollama-models

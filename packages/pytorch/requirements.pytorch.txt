@@ -4,3 +4,4 @@ torchaudio
 transformers
 flask
 requests
+python-dotenv
