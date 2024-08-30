@@ -55,7 +55,7 @@ services:
       - LLM_API_URL=http://host.docker.internal:5555/predict
     depends_on:
       - ollama
-    command: sh -c "sleep 10 && aider --cache-prompts --gui --model ollama/deepseek-coder-v2"
+    command: --cache-prompts --gui --model ollama/deepseek-coder-v2
     networks:
       - aigency-network
   pytorch:
