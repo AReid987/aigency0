@@ -99,6 +99,7 @@ dmypy.json
 .pyre/
 .pytype/
 cython_debug
+
 # Local env files
 # .env
 .env.local
@@ -156,7 +157,7 @@ agent-zero/work_dir
 .packages
 
 # models
-
+ollama_models
 # aider
 aider.code-workspace
 *.pyc
@@ -167,7 +168,7 @@ _site
 .jekyll-cache/
 .jekyll-metadata
 
-# agent-zero
+t-zero
 **/.DS_Store
 **/.env
 **/__pycache__/

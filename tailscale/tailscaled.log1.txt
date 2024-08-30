@@ -1,0 +1,22 @@
+{"logtail":{"client_time":"2024-08-30T21:49:45.893366006Z","proc_id":958792514,"proc_seq":194},"text":"tailscaled got signal terminated; shutting down\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.894528422Z","proc_id":958792514,"proc_seq":195},"text":"canceling captive portal context\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.896788006Z","proc_id":958792514,"proc_seq":196},"text":"control: client.Shutdown ...\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.897080006Z","proc_id":958792514,"proc_seq":197},"v":1,"text":"control: authRoutine: context done.\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.897517756Z","proc_id":958792514,"proc_seq":198},"text":"control: authRoutine: exiting\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.897659464Z","proc_id":958792514,"proc_seq":199},"text":"control: updateRoutine: exiting\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.897726589Z","proc_id":958792514,"proc_seq":200},"v":1,"text":"control: PollNetMap: context canceled\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.897933547Z","proc_id":958792514,"proc_seq":201},"text":"control: mapRoutine: exiting\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.900415506Z","proc_id":958792514,"proc_seq":202},"text":"control: Client.Shutdown done.\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.903534047Z","proc_id":958792514,"proc_seq":203},"text":"magicsock: closing connection to derp-9 (conn-close), age 1m56s\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.903754006Z","proc_id":958792514,"proc_seq":204},"text":"magicsock: 0 active derp conns\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.905729297Z","proc_id":958792514,"proc_seq":205},"text":"Receive func ReceiveIPv6 exiting with error: *net.OpError, read udp [::]:63737: raw-read udp6 [::]:63737: use of closed network connection\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.906551797Z","proc_id":958792514,"proc_seq":206},"v":2,"text":"wg: Routine: receive incoming mkReceiveFunc - stopped\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.907121256Z","proc_id":958792514,"proc_seq":207},"v":1,"text":"warning: fakeRouter.Close: not implemented.\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.907516339Z","proc_id":958792514,"proc_seq":208},"v":2,"text":"wg: Device closing\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.908365297Z","proc_id":958792514,"proc_seq":209},"v":2,"text":"wg: Routine: receive incoming receiveDERP - stopped\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.909011881Z","proc_id":958792514,"proc_seq":210},"text":"Receive func ReceiveIPv4 exiting with error: *net.OpError, read udp 0.0.0.0:59592: raw-read udp4 0.0.0.0:59592: use of closed network connection\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.909181797Z","proc_id":958792514,"proc_seq":211},"v":2,"text":"wg: Routine: receive incoming mkReceiveFunc - stopped\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.909624589Z","proc_id":958792514,"proc_seq":212},"v":2,"text":"wg: [aTKkr] - Stopping\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.909969089Z","proc_id":958792514,"proc_seq":213},"v":2,"text":"wg: Device closed\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.912553839Z","proc_id":958792514,"proc_seq":214},"text":"flushing log.\n"}
+{"logtail":{"client_time":"2024-08-30T21:49:45.912880464Z","proc_id":958792514,"proc_seq":215},"text":"logger closing down\n"}

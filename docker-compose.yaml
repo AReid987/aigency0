@@ -1,4 +1,27 @@
 services:
+  # caddy:
+  #   image: caddy
+  #   # ports:
+  #   #   - "80:80"
+  #   #   - "443:443"
+  #   volumes:
+  #     - ./Caddyfile:/etc/caddy/Caddyfile
+  #     - caddy_data:/data
+  #     - caddy_config:/config
+  #   network_mode: service:tailscale
+  #   container_name: caddy
+    # depends_on:
+    #   - unified-dashboard
+  # unified-dashboard:
+  #   build:
+  #     context: ./packages/dashboard
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./dashboard:/app
+  #   environment:
+  #     - NODE_ENV=production
+  #   network_mode: service:tailscale
+  #   hostname: unified-dashboard
   tailscale:
     image: tailscale/tailscale:latest
     container_name: tailscale
@@ -18,31 +41,41 @@ services:
     restart: unless-stopped
   nginx:
     image: nginx
-    networks:
-      - aigency-network
+    network_mode: service:tailscale
+    container_name: nginx
   dask-scheduler:
     image: twgsportsclub/dask-docker-arm64
     platform: linux/arm64
     command: ["dask", "scheduler"]
-    networks:
-      - aigency-network
+    network_mode: service:tailscale
+    container_name: dask-scheduler
   dask-worker:
     image: twgsportsclub/dask-docker-arm64
     platform: linux/arm64
     command: ["dask", "worker", "localhost:8786"]
-    depends_on:
-      - dask-scheduler
     deploy:
       replicas: ${DASK_WORKERS:-1}
-    networks:
-      - aigency-network
+    network_mode: service:tailscale
+    container_name: dask-worker
+    depends_on:
+      - dask-scheduler
   ollama:
     image: ollama/ollama
     volumes:
-      - ./ollama-models:/root/.ollama
-    networks:
-      - aigency-network
-    command: ollama serve
+      - ./ollama_models:/root/.ollama
+    network_mode: service:tailscale
+    container_name: ollama
+  pull-model:
+    image: genai-stack/pull-model:latest
+    build:
+      context: ./packages/ollama
+      dockerfile: Dockerfile.pull_model
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://aigency-tailent:11434}
+      - LLM=${LLM:-codellama:7b}
+    container_name: pull_model
+    network_mode: service:tailscale
+    tty: true
   aider:
     image: paulgauthier/aider-full
     pull_policy: always
@@ -53,11 +86,12 @@ services:
       - OLLAMA_API_BASE=http://localhost:11434
       - MLX_API_BASE=http://host.docker.internal:5555
       - LLM_API_URL=http://host.docker.internal:5555/predict
-    depends_on:
       - ollama
     command: --cache-prompts --gui --model ollama/deepseek-coder-v2
-    networks:
-      - aigency-network
+    network_mode: service:tailscale
+    container_name: aider
+    depends_on:
+      - ollama
   pytorch:
     build:
       context: ./packages/pytorch
@@ -66,10 +100,23 @@ services:
       - .:/app
     env_file:
       - .env
+    container_name: pytorch
     command: python server.py
-networks:
-  aigency-network:
-    driver: bridge
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    network_mode: service:tailscale
+    container_name: redis
+volumes:
+  redis_data:
+  ollama_models:
+  caddy_data:
+  caddy_config:
+
+
 
   # coder:
   #   # This MUST be stable for our documentation and
