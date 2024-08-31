@@ -32,7 +32,7 @@ services:
       - NET_ADMIN
       - SYS_MODULE
     environment:
-      - TS_AUTHKEY=tskey-auth-kn4443UWS611CNTRL-TX74yvREWSAbjeZLKmFySAh7RggBFZ5XP
+      - TS_AUTHKEY=${TS_KEY}
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_ROUTES=10.0.0.0/8
       - TS_HOSTNAME=aigency-tailnet
@@ -71,7 +71,7 @@ services:
       context: ./packages/ollama
       dockerfile: Dockerfile.pull_model
     environment:
-      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://aigency-tailent:11434}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://aigency-tailnet:11434}
       - LLM=${LLM:-codellama:7b}
     container_name: pull_model
     network_mode: service:tailscale
@@ -83,7 +83,7 @@ services:
       - .:/app
     environment:
       # - GROQ_API_KEY=${GROQ_API_KEY}
-      - OLLAMA_API_BASE=http://localhost:11434
+      - OLLAMA_API_BASE=http://aigency-tailnet:11434
       - MLX_API_BASE=http://host.docker.internal:5555
       - LLM_API_URL=http://host.docker.internal:5555/predict
       - ollama
