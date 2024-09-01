@@ -25,92 +25,97 @@ services:
   tailscale:
     image: tailscale/tailscale:latest
     container_name: tailscale
-    volumes:
-      - ./tailscale:/var/lib/tailscale
-      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
+    hostname: aigency-tailnet
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+    env_file:
+      - .env
     environment:
-      - TS_AUTHKEY=${TS_KEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_ROUTES=10.0.0.0/8
       - TS_HOSTNAME=aigency-tailnet
-      - TS_EXTRA_ARGS=--hostname=aigency-tailnet --advertise-tags=tag:aigency
+      - TS_AUTHKEY=${TS_KEY}
+      - TS_SERVE_CONFIG=/packages/config/nginx.json
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_ROUTES=10.0.0.0/12
+      - TS_USERSPACE=false
+      - "TS_EXTRA_ARGS=--hostname=aigency-tailnet --advertise-tags=tag:aigency --exit-node=aigency-tailnet --advertise-exit-node --exit-node-allow-lan-access --advertise-routes=10.0.0.0/12 --ssh --ts-auth=${TS_KEY}"
     network_mode: host
-    restart: unless-stopped
+    volumes:
+      - ./tailscale:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
   nginx:
     image: nginx
+    container_name: tailscale-web
     network_mode: service:tailscale
-    container_name: nginx
   dask-scheduler:
     image: twgsportsclub/dask-docker-arm64
-    platform: linux/arm64
-    command: ["dask", "scheduler"]
-    network_mode: service:tailscale
     container_name: dask-scheduler
+    platform: linux/arm64
+    network_mode: service:tailscale
+    command: ["dask", "scheduler"]
   dask-worker:
     image: twgsportsclub/dask-docker-arm64
+    container_name: dask-worker
     platform: linux/arm64
-    command: ["dask", "worker", "localhost:8786"]
     deploy:
       replicas: ${DASK_WORKERS:-1}
-    network_mode: service:tailscale
-    container_name: dask-worker
     depends_on:
       - dask-scheduler
+    network_mode: service:tailscale
+    command: ["dask", "worker", "localhost:8786"]
   ollama:
     image: ollama/ollama
+    container_name: ollama
     volumes:
       - ./ollama_models:/root/.ollama
     network_mode: service:tailscale
-    container_name: ollama
   pull-model:
     image: genai-stack/pull-model:latest
+    container_name: pull-model
     build:
       context: ./packages/ollama
       dockerfile: Dockerfile.pull_model
+    tty: true
     environment:
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://aigency-tailnet:11434}
       - LLM=${LLM:-codellama:7b}
-    container_name: pull_model
     network_mode: service:tailscale
-    tty: true
   aider:
     image: paulgauthier/aider-full
     pull_policy: always
-    volumes:
-      - .:/app
+    container_name: aider
     environment:
       # - GROQ_API_KEY=${GROQ_API_KEY}
       - OLLAMA_API_BASE=http://aigency-tailnet:11434
       - MLX_API_BASE=http://host.docker.internal:5555
       - LLM_API_URL=http://host.docker.internal:5555/predict
       - ollama
-    command: --cache-prompts --gui --model ollama/deepseek-coder-v2
     network_mode: service:tailscale
-    container_name: aider
     depends_on:
       - ollama
+    volumes:
+      - .:/app
+    command: --cache-prompts --gui --model ollama/deepseek-coder-v2
   pytorch:
     build:
       context: ./packages/pytorch
       dockerfile: Dockerfile.pytorch
-    volumes:
-      - .:/app
+    container_name: pytorch
     env_file:
       - .env
-    container_name: pytorch
+    volumes:
+      - .:/app
     command: python server.py
   redis:
     image: redis:alpine
-    ports:
-      - "6379:6379"
+    container_name: redis
     volumes:
       - redis_data:/data
     network_mode: service:tailscale
-    container_name: redis
 volumes:
+  tailscale:
+    driver: local
   redis_data:
   ollama_models:
   caddy_data:
@@ -444,3 +449,5 @@ volumes:
 
 # volumes:
 #   backend-dbstore:
+
+
