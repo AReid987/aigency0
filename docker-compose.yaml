@@ -1,0 +1,326 @@
+services:
+<<<<<<< HEAD
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - ai-assistant-network
+
+  searxng:
+    image: searxng/searxng:latest
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    ports:
+      - "4000:8080"
+    networks:
+      - ai-assistant-network
+    restart: unless-stopped
+
+  perplexica-backend:
+    build:
+      context: ./packages/Perplexica
+      dockerfile: backend.dockerfile
+      args:
+        - SEARXNG_API_URL=http://searxng:8080
+    depends_on:
+      - searxng
+      - ollama
+    ports:
+      - "3001:3001"
+    volumes:
+      - backend-dbstore:/home/perplexica/data
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - ai-assistant-network
+    restart: unless-stopped
+
+  perplexica-frontend:
+    build:
+      context: ./packages/Perplexica
+      dockerfile: app.dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://127.0.0.1:3001/api
+        - NEXT_PUBLIC_WS_URL=ws://127.0.0.1:3001
+    depends_on:
+      - perplexica-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - ai-assistant-network
+    restart: unless-stopped
+
+  aider:
+    build:
+      context: ./packages/aider
+      dockerfile: Dockerfile
+      args:
+        - PYTHON_VERSION=3.12
+    depends_on:
+      - ollama
+    stdin_open: true
+    tty: true
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./packages/aider/work_dir:/app
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    command: aider --gui --model deepseek-coder-v2:latest --ollama-url http://ollama:11434 --no-git
+    networks:
+      - ai-assistant-network
+    restart: unless-stopped
+
+  agent-zero:
+    build:
+      context: ./packages/agent-zero/docker
+      dockerfile: Dockerfile
+      args:
+        - PYTHON_VERSION=3.12
+    depends_on:
+      - ollama
+    ports:
+      - "5001:5001"
+      - "2222:22"
+    volumes:
+      - ./agent-zero/work_dir:/home/agentuser/work_dir
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    cap_add:
+      - SYS_ADMIN
+    # security_opt:
+    #   - seccomp:unconfined
+    networks:
+      - ai-assistant-network
+    restart: unless-stopped
+
+networks:
+  ai-assistant-network:
+
+volumes:
+  backend-dbstore:
+  ollama-data:
+
+# services:
+#   ollama:
+#     image: docker.io/ollama/ollama:latest
+#     ports:
+#       - 11434:11434
+#   searxng:
+#     image: docker.io/searxng/searxng:latest
+#     volumes:
+#       - ./searxng:/etc/searxng:rw
+#     ports:
+#       - 4000:8080
+#     networks:
+#       - perplexica-network
+#     restart: unless-stopped
+
+#   perplexica-backend:
+#     build:
+#       context: ./packages/Perplexica
+#       dockerfile: backend.dockerfile
+#       args:
+#         - SEARXNG_API_URL=http://searxng:8080
+#     depends_on:
+#       - searxng
+#     ports:
+#       - 3001:3001
+#     volumes:
+#       - backend-dbstore:/home/perplexica/data
+#     extra_hosts:
+#       - 'host.docker.internal:host-gateway'
+#     networks:
+#       - perplexica-network
+#     restart: unless-stopped
+
+#   perplexica-frontend:
+#     build:
+#       context: ./packages/Perplexica
+#       dockerfile: app.dockerfile
+#       args:
+#         - NEXT_PUBLIC_API_URL=http://127.0.0.1:3001/api
+#         - NEXT_PUBLIC_WS_URL=ws://127.0.0.1:3001
+#     depends_on:
+#       - perplexica-backend
+#     ports:
+#       - 3000:3000
+#     networks:
+#       - perplexica-network
+#     restart: unless-stopped
+
+#   aider:
+#     build:
+#       context: ./packages/aider
+#       dockerfile: Dockerfile
+#       args:
+#         - PYTHON_VERSION=3.12
+#     depends_on:
+#       - ollama
+#     ports:
+#       - 5555:5555
+#     networks:
+#       - perplexica-network
+#     restart: unless-stopped
+
+#   agent-zero:
+#     build:
+#       context: ./packages/agent-zero/docker
+#       dockerfile: Dockerfile
+#       args:
+#         - PYTHON_VERSION=3.12
+#     depends_on:
+#       - ollama
+#     ports:
+#       - 5001:5001
+#     networks:
+#       - perplexica-network
+#     restart: unless-stopped
+
+# networks:
+#   perplexica-network:
+
+# volumes:
+#   backend-dbstore:
+=======
+  # caddy:
+  #   image: caddy
+  #   # ports:
+  #   #   - "80:80"
+  #   #   - "443:443"
+  #   volumes:
+  #     - ./Caddyfile:/etc/caddy/Caddyfile
+  #     - caddy_data:/data
+  #     - caddy_config:/config
+  #   network_mode: service:tailscale
+  #   container_name: caddy
+    # depends_on:
+    #   - unified-dashboard
+  # unified-dashboard:
+  #   build:
+  #     context: ./packages/dashboard
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./dashboard:/app
+  #   environment:
+  #     - NODE_ENV=production
+  #   network_mode: service:tailscale
+  #   hostname: unified-dashboard
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: tailscale
+    restart: unless-stopped
+    hostname: aigency-tailnet
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    env_file:
+      - .env
+    environment:
+      - TS_HOSTNAME=aigency-tailnet
+      - TS_AUTHKEY=${TS_KEY}
+      - TS_SERVE_CONFIG=/packages/config/nginx.json
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_ROUTES=10.0.0.0/12
+      - TS_USERSPACE=false
+      - "TS_EXTRA_ARGS=--hostname=aigency-tailnet --advertise-tags=tag:aigency --exit-node=aigency-tailnet --advertise-exit-node --exit-node-allow-lan-access --advertise-routes=10.0.0.0/12 --ssh --ts-auth=${TS_KEY}"
+    network_mode: host
+    volumes:
+      - ./tailscale:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+  nginx:
+    image: nginx
+    container_name: tailscale-web
+    network_mode: service:tailscale
+  litellm:
+    image: ghcr.io/berriai/litellm-database:main-stable
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Change POSTGRES_PORT to 6543 for Transaction Mode for Supabase connection pooler
+      DATABASE_URL: ${DATABASE_URL}
+      MASTER_KEY: ${MASTER_KEY}
+      UI_USERNAME: ${UI_USERNAME}
+      UI_PASSWORD: ${UI_PASSWORD}
+      STORE_MODEL_IN_DB: "True"
+    network_mode: service:tailscale
+    volumes:
+      - ./packages/litellm/config.yaml:/app/config.yaml
+    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "8"]
+  dask-scheduler:
+    image: twgsportsclub/dask-docker-arm64
+    container_name: dask-scheduler
+    platform: linux/arm64
+    network_mode: service:tailscale
+    command: ["dask", "scheduler"]
+  dask-worker:
+    image: twgsportsclub/dask-docker-arm64
+    container_name: dask-worker
+    platform: linux/arm64
+    deploy:
+      replicas: ${DASK_WORKERS:-1}
+    depends_on:
+      - dask-scheduler
+    network_mode: service:tailscale
+    command: ["dask", "worker", "localhost:8786"]
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    volumes:
+      - ./ollama_models:/root/.ollama
+    network_mode: service:tailscale
+  pull-model:
+    image: genai-stack/pull-model:latest
+    container_name: pull-model
+    build:
+      context: ./packages/ollama
+      dockerfile: Dockerfile.pull_model
+    tty: true
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://aigency-tailnet:11434}
+      - LLM=${LLM:-codellama:7b}
+    network_mode: service:tailscale
+  aider:
+    image: paulgauthier/aider-full
+    pull_policy: always
+    container_name: aider
+    environment:
+      # - GROQ_API_KEY=${GROQ_API_KEY}
+      - OLLAMA_API_BASE=http://aigency-tailnet:11434
+      - MLX_API_BASE=http://host.docker.internal:5555
+      - LLM_API_URL=http://host.docker.internal:5555/predict
+      - ollama
+    network_mode: service:tailscale
+    depends_on:
+      - ollama
+    volumes:
+      - .:/app
+    command: --cache-prompts --gui --model ollama/deepseek-coder-v2
+  pytorch:
+    build:
+      context: ./packages/pytorch
+      dockerfile: Dockerfile.pytorch
+    container_name: pytorch
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: python server.py
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    network_mode: service:tailscale
+volumes:
+  tailscale:
+    driver: local
+  redis_data:
+  ollama_models:
+  caddy_data:
+  caddy_config:
+>>>>>>> 83f71b59 (new remote. who dis?)

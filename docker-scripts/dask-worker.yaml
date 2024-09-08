@@ -1,0 +1,7 @@
+services:
+  # Runs a Dask worker that connects to the Dask scheduler running at "tcp://tessara:8786".
+  # The worker will run on the specified platform, which defaults to "linux/amd64" if not provided.
+  worker:
+    image: daskdev/dask
+    # platform: ${BUILDPLATFORM:-linux/arm64}
+    command: ["dask-worker", "tcp://tessara:8786"]

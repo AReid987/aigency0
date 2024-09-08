@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="16" failures="0" skipped="0" tests="16" time="2.600" timestamp="2024-09-07T01:47:28.756925+00:00" hostname="Tessara"><testcase classname="" name="packages.aider.benchmark.test_benchmark" file="packages/aider/benchmark/test_benchmark.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/benchmark/test_benchmark.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/benchmark/test_benchmark.py:5: in &lt;module&gt;
+    from benchmark import cleanup_test_output
+E   ImportError: cannot import name 'cleanup_test_output' from 'benchmark' (/Users/antonioreid/devLand/aigency/packages/aider/benchmark/__init__.py)</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_coder" file="packages/aider/tests/basic/test_coder.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_coder.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_coder.py:7: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_commands" file="packages/aider/tests/basic/test_commands.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_commands.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_commands.py:10: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_editblock" file="packages/aider/tests/basic/test_editblock.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_editblock.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_editblock.py:8: in &lt;module&gt;
+    from aider.coders import Coder
+packages/aider/aider/coders/__init__.py:1: in &lt;module&gt;
+    from .ask_coder import AskCoder
+packages/aider/aider/coders/ask_coder.py:2: in &lt;module&gt;
+    from .base_coder import Coder
+packages/aider/aider/coders/base_coder.py:23: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_history" file="packages/aider/tests/basic/test_history.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_history.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_history.py:3: in &lt;module&gt;
+    from aider.history import ChatSummary
+packages/aider/aider/history.py:3: in &lt;module&gt;
+    from aider import models, prompts
+packages/aider/aider/models.py:13: in &lt;module&gt;
+    from PIL import Image
+E   ModuleNotFoundError: No module named 'PIL'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_io" file="packages/aider/tests/basic/test_io.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_io.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_io.py:6: in &lt;module&gt;
+    from aider.io import AutoCompleter, InputOutput
+packages/aider/aider/io.py:7: in &lt;module&gt;
+    from prompt_toolkit.completion import Completer, Completion
+E   ModuleNotFoundError: No module named 'prompt_toolkit'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_main" file="packages/aider/tests/basic/test_main.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_main.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_main.py:10: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_models" file="packages/aider/tests/basic/test_models.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_models.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_models.py:3: in &lt;module&gt;
+    from aider.models import Model
+packages/aider/aider/models.py:13: in &lt;module&gt;
+    from PIL import Image
+E   ModuleNotFoundError: No module named 'PIL'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_repo" file="packages/aider/tests/basic/test_repo.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_repo.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_repo.py:9: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_repomap" file="packages/aider/tests/basic/test_repomap.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_repomap.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_repomap.py:5: in &lt;module&gt;
+    from aider.io import InputOutput
+packages/aider/aider/io.py:7: in &lt;module&gt;
+    from prompt_toolkit.completion import Completer, Completion
+E   ModuleNotFoundError: No module named 'prompt_toolkit'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_scripting" file="packages/aider/tests/basic/test_scripting.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_scripting.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_scripting.py:5: in &lt;module&gt;
+    from aider.coders import Coder
+packages/aider/aider/coders/__init__.py:1: in &lt;module&gt;
+    from .ask_coder import AskCoder
+packages/aider/aider/coders/ask_coder.py:2: in &lt;module&gt;
+    from .base_coder import Coder
+packages/aider/aider/coders/base_coder.py:23: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_udiff" file="packages/aider/tests/basic/test_udiff.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_udiff.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_udiff.py:3: in &lt;module&gt;
+    from aider.coders.udiff_coder import find_diffs
+packages/aider/aider/coders/__init__.py:1: in &lt;module&gt;
+    from .ask_coder import AskCoder
+packages/aider/aider/coders/ask_coder.py:2: in &lt;module&gt;
+    from .base_coder import Coder
+packages/aider/aider/coders/base_coder.py:23: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.basic.test_wholefile" file="packages/aider/tests/basic/test_wholefile.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/basic/test_wholefile.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/basic/test_wholefile.py:8: in &lt;module&gt;
+    from aider.coders import Coder
+packages/aider/aider/coders/__init__.py:1: in &lt;module&gt;
+    from .ask_coder import AskCoder
+packages/aider/aider/coders/ask_coder.py:2: in &lt;module&gt;
+    from .base_coder import Coder
+packages/aider/aider/coders/base_coder.py:23: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.browser.test_browser" file="packages/aider/tests/browser/test_browser.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/browser/test_browser.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/browser/test_browser.py:4: in &lt;module&gt;
+    from aider.main import main
+packages/aider/aider/main.py:8: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.help.test_help" file="packages/aider/tests/help/test_help.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/help/test_help.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/help/test_help.py:5: in &lt;module&gt;
+    from aider.coders import Coder
+packages/aider/aider/coders/__init__.py:1: in &lt;module&gt;
+    from .ask_coder import AskCoder
+packages/aider/aider/coders/ask_coder.py:2: in &lt;module&gt;
+    from .base_coder import Coder
+packages/aider/aider/coders/base_coder.py:23: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase><testcase classname="" name="packages.aider.tests.scrape.test_scrape" file="packages/aider/tests/scrape/test_scrape.py" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/antonioreid/devLand/aigency/packages/aider/tests/scrape/test_scrape.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../miniconda3/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+packages/aider/tests/scrape/test_scrape.py:4: in &lt;module&gt;
+    from aider.commands import Commands
+packages/aider/aider/commands.py:9: in &lt;module&gt;
+    import git
+E   ModuleNotFoundError: No module named 'git'</error></testcase></testsuite></testsuites>

@@ -1,0 +1,37 @@
+// cloud-architecture-diagram
+
+// // Define groups and nodes
+// The Internet [icon: globe]
+// Aigency Microservices [icon: aws-vpc] {
+//     Aigency Tailnet {
+// 		Tailscale Container [icon: lock]
+// 		MagicDNS [icon: azure-dns-zones]
+//     Ollama Container
+// 		Aider Container
+// 		Agent Zero Container
+// 		Dask Scheduler Container [icon: dask]
+// 		Dask Worker Container [icon: dask]
+// 		vLLM Container [icon: vllm]
+// 		PyTorch Container [icon: pytorch]
+//   }
+// 		MLX  [icon: gcp-cloud-gpu]
+
+// }
+
+// // Define connections
+// The Internet > Tailscale Container > MagicDNS
+// MagicDNS > Ollama Container
+// MagicDNS > Aider Container
+// MagicDNS > Agent Zero Container
+// MagicDNS > Dask Scheduler Container
+// MagicDNS > Dask Worker Container
+// MagicDNS > MLX Container
+// MagicDNS > vLLM Container
+// MagicDNS > PyTorch Container
+// MagicDNS > Nginx Container
+// MagicDNS > Coder Container
+// MagicDNS > Searxing Container
+// MagicDNS > Perplexica Container
+// MagicDNS > Kafka Container
+// MagicDNS > Grafana Container
+// MagicDNS > Prometheus Container

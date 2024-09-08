@@ -1,0 +1,89 @@
+entry: gh-start
+executions:
+  - src:
+      node: gh-start
+      port: exec-on-push
+    dst:
+      node: gh-checkout
+      port: exec
+  - src:
+      node: gh-actions-setup-python-v5-2-0-lion-blue-plum
+      port: exec
+    dst:
+      node: run-v1-peach-dolphin-pineapple
+      port: exec
+  - src:
+      node: run-v1-peach-dolphin-pineapple
+      port: exec-success
+    dst:
+      node: run-v1-orange-panda-gray
+      port: exec
+  - src:
+      node: run-v1-orange-panda-gray
+      port: exec-success
+    dst:
+      node: gh-codecov-codecov-action-v4-5-0-pomegranate-blueberry-red
+      port: exec
+  - src:
+      node: gh-checkout
+      port: exec
+    dst:
+      node: gh-actions-setup-python-v5-2-0-lion-blue-plum
+      port: exec
+connections: []
+nodes:
+  - id: gh-start
+    type: gh-start@v1
+    position:
+      x: 100
+      y: 100
+    settings:
+      folded: false
+  - id: gh-checkout
+    type: github.com/actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+    position:
+      x: 450
+      y: 100
+    settings:
+      folded: false
+  - id: gh-actions-setup-python-v5-2-0-lion-blue-plum
+    type: github.com/actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3
+    position:
+      x: 980
+      y: 120
+    inputs:
+      python-version: 3.11.9
+    settings:
+      folded: false
+  - id: run-v1-peach-dolphin-pineapple
+    type: run@v1
+    position:
+      x: 1490
+      y: 140
+    inputs:
+      script: uv pip install pytest pytest-cov
+    settings:
+      folded: false
+  - id: run-v1-orange-panda-gray
+    type: run@v1
+    position:
+      x: 1910
+      y: 130
+    inputs:
+      script: pytest --cov
+    settings:
+      folded: false
+  - id: gh-codecov-codecov-action-v4-5-0-pomegranate-blueberry-red
+    type: github.com/codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673
+    position:
+      x: 2310
+      y: 20
+    inputs:
+      name: Upload results to Codecov
+      token: ${{ CODECOV_TOKEN }}
+    settings:
+      folded: false
+registries:
+  - github.com/actions/setup-python@v5.2.0
+  - github.com/codecov/codecov-action@v4.5.0
+description: ''
