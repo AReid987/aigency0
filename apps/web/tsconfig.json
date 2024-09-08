@@ -9,11 +9,7 @@
   },
   "include": [
     "next-env.d.ts",
-<<<<<<< HEAD
-    "next.config.mjs",
-=======
     "next.config.js",
->>>>>>> 83f71b59 (new remote. who dis?)
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"

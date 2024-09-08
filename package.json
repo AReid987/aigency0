@@ -1,7 +1,5 @@
 {
   "name": "aigency",
-<<<<<<< HEAD
-=======
   "authors": [
     {
       "name": "Adam Kabak"
@@ -10,7 +8,6 @@
       "name": "Antonio Reid"
     }
   ],
->>>>>>> 83f71b59 (new remote. who dis?)
   "private": true,
   "scripts": {
     "build": "turbo build",
@@ -19,13 +16,6 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "prettier": "^3.2.5",
-    "turbo": "^2.0.13",
-    "typescript": "^5.4.5"
-  },
-  "packageManager": "pnpm@8.15.6",
-=======
     "@biomejs/biome": "^1.8.3",
     "@codecov/webpack-plugin": "0.0.1-beta.12",
     "prettier": "^3.2.5",
@@ -33,7 +23,6 @@
     "typescript": "^5.4.5"
   },
   "packageManager": "pnpm@9.9.0",
->>>>>>> 83f71b59 (new remote. who dis?)
   "engines": {
     "node": ">=18"
   },
@@ -41,16 +30,11 @@
     "overrides": {
       "ip@<1.1.9": ">=1.1.9",
       "ip@=2.0.0": ">=2.0.1",
-<<<<<<< HEAD
-      "braces@<3.0.3": ">=3.0.3"
-    }
-=======
       "braces@<3.0.3": ">=3.0.3",
       "micromatch@<4.0.8": ">=4.0.8"
     }
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.25.0"
->>>>>>> 83f71b59 (new remote. who dis?)
   }
 }
