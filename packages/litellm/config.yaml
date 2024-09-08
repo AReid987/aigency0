@@ -22,9 +22,9 @@ litellm_settings:
   context_window_fallbacks: [{"gemini-flash": ["mistral-nemo"]}]
 
 router_settings:
-  routing_strategy: simple-shuffle
+  routing_strategy: usage-based-routing-v2
   num_retries: 2
   timeout: 30
-environment_variables:
 
-  TRACELOOP_API_KEY: os.environ/TRACELOOP_API_KEY
+# environment_variables:
+#   TRACELOOP_API_KEY: os.environ/TRACELOOP_API_KEY

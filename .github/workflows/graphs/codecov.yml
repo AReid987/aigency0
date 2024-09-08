@@ -7,12 +7,6 @@ executions:
       node: gh-checkout
       port: exec
   - src:
-      node: gh-actions-setup-python-v5-2-0-lion-blue-plum
-      port: exec
-    dst:
-      node: run-v1-peach-dolphin-pineapple
-      port: exec
-  - src:
       node: run-v1-peach-dolphin-pineapple
       port: exec-success
     dst:
@@ -30,6 +24,18 @@ executions:
     dst:
       node: gh-actions-setup-python-v5-2-0-lion-blue-plum
       port: exec
+  - src:
+      node: gh-actions-setup-python-v5-2-0-lion-blue-plum
+      port: exec
+    dst:
+      node: run-v1-zebra-banana-pineapple
+      port: exec
+  - src:
+      node: run-v1-zebra-banana-pineapple
+      port: exec-success
+    dst:
+      node: run-v1-peach-dolphin-pineapple
+      port: exec
 connections: []
 nodes:
   - id: gh-start
@@ -44,6 +50,8 @@ nodes:
     position:
       x: 450
       y: 100
+    inputs:
+      fetch-depth: '0'
     settings:
       folded: false
   - id: gh-actions-setup-python-v5-2-0-lion-blue-plum
@@ -58,29 +66,38 @@ nodes:
   - id: run-v1-peach-dolphin-pineapple
     type: run@v1
     position:
-      x: 1490
-      y: 140
+      x: 1760
+      y: 220
     inputs:
-      script: uv pip install pytest pytest-cov
+      script: uv pip install -r requirements.txt
     settings:
       folded: false
   - id: run-v1-orange-panda-gray
     type: run@v1
     position:
-      x: 1910
-      y: 130
+      x: 2160
+      y: 440
     inputs:
-      script: pytest --cov
+      script: pytest --cov --junitxml=junit.xml
     settings:
       folded: false
   - id: gh-codecov-codecov-action-v4-5-0-pomegranate-blueberry-red
     type: github.com/codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673
     position:
-      x: 2310
-      y: 20
+      x: 2590
+      y: -200
     inputs:
       name: Upload results to Codecov
-      token: ${{ CODECOV_TOKEN }}
+      token: ${{ secrets.CODECOV_TOKEN }}
+    settings:
+      folded: false
+  - id: run-v1-zebra-banana-pineapple
+    type: run@v1
+    position:
+      x: 1410
+      y: 20
+    inputs:
+      script: uv pip install --upgrade pip
     settings:
       folded: false
 registries:

@@ -1,0 +1,7 @@
+[project]
+name = "aigency"
+version = "0.1.0"
+description = "A platform which enables collaboration between Humans and Agents."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []

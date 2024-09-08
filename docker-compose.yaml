@@ -59,11 +59,18 @@ services:
       MASTER_KEY: ${MASTER_KEY}
       UI_USERNAME: ${UI_USERNAME}
       UI_PASSWORD: ${UI_PASSWORD}
+      TRACELOOP_API_KEY: ${TRACELOOP_API_KEY}
+      LITELLM_SALT_KEY: ${LITELLM_SALT_KEY}
       STORE_MODEL_IN_DB: "True"
     network_mode: service:tailscale
     volumes:
       - ./packages/litellm/config.yaml:/app/config.yaml
-    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "8"]
+    entrypoint: []
+    command: >
+      /bin/sh -c "
+      pip install traceloop-sdk &&
+      litellm --config /app/config.yaml --port 4444 --num_workers 8
+      "
   dask-scheduler:
     image: twgsportsclub/dask-docker-arm64
     container_name: dask-scheduler
