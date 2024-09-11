@@ -1,12 +1,11 @@
-from VAD.vad_iterator import VADIterator
-from baseHandler import BaseHandler
+import logging
+
 import numpy as np
 import torch
+from baseHandler import BaseHandler
 from rich.console import Console
-
 from utils.utils import int2float
-
-import logging
+from VAD.vad_iterator import VADIterator
 
 logger = logging.getLogger(__name__)
 

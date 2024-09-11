@@ -240,7 +240,10 @@ class TestRepoMapAllLanguages(unittest.TestCase):
                     " std::endl;\n    return 0;\n}\n"
                 ),
             ),
-            "elisp": ("test.el", '(defun greet (name)\n  (message "Hello, %s!" name))\n'),
+            "elisp": (
+                "test.el",
+                '(defun greet (name)\n  (message "Hello, %s!" name))\n',
+            ),
             "elixir": (
                 "test.ex",
                 (
@@ -273,7 +276,10 @@ class TestRepoMapAllLanguages(unittest.TestCase):
                 "test.js",
                 "function greet(name) {\n    console.log(`Hello, ${name}!`);\n}\n",
             ),
-            "ocaml": ("test.ml", "let greet name =\n  Printf.printf \"Hello, %s!\\n\" name\n"),
+            "ocaml": (
+                "test.ml",
+                'let greet name =\n  Printf.printf "Hello, %s!\\n" name\n',
+            ),
             "php": (
                 "test.php",
                 '<?php\nfunction greet($name) {\n    echo "Hello, $name!";\n}\n?>\n',
@@ -296,13 +302,16 @@ class TestRepoMapAllLanguages(unittest.TestCase):
             io = InputOutput()
             repo_map = RepoMap(main_model=self.GPT35, root=temp_dir, io=io)
             other_files = [
-                os.path.join(temp_dir, filename) for filename, _ in language_files.values()
+                os.path.join(temp_dir, filename)
+                for filename, _ in language_files.values()
             ]
             result = repo_map.get_repo_map([], other_files)
 
             # Check if the result contains all the expected files
             for lang, (filename, _) in language_files.items():
-                self.assertIn(filename, result, f"File for language {lang} not found in repo map")
+                self.assertIn(
+                    filename, result, f"File for language {lang} not found in repo map"
+                )
 
             # close the open cache files, so Windows won't error
             del repo_map

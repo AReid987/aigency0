@@ -79,20 +79,26 @@ class Voice:
         filename = tempfile.mktemp(suffix=".wav")
 
         try:
-            sample_rate = int(self.sd.query_devices(None, "input")["default_samplerate"])
+            sample_rate = int(
+                self.sd.query_devices(None, "input")["default_samplerate"]
+            )
         except (TypeError, ValueError):
             sample_rate = 16000  # fallback to 16kHz if unable to query device
 
         self.start_time = time.time()
 
         try:
-            with self.sd.InputStream(samplerate=sample_rate, channels=1, callback=self.callback):
+            with self.sd.InputStream(
+                samplerate=sample_rate, channels=1, callback=self.callback
+            ):
                 prompt(self.get_prompt, refresh_interval=0.1)
         except self.sd.PortAudioError as err:
             print(err)
             return
 
-        with sf.SoundFile(filename, mode="x", samplerate=sample_rate, channels=1) as file:
+        with sf.SoundFile(
+            filename, mode="x", samplerate=sample_rate, channels=1
+        ) as file:
             while not self.q.empty():
                 file.write(self.q.get())
 

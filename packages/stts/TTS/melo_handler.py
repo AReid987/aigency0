@@ -1,10 +1,11 @@
-from melo.api import TTS
 import logging
-from baseHandler import BaseHandler
+
 import librosa
 import numpy as np
-from rich.console import Console
 import torch
+from baseHandler import BaseHandler
+from melo.api import TTS
+from rich.console import Console
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +39,10 @@ class MeloTTSHandler(BaseHandler):
             import time
 
             start = time.time()
-            torch.mps.synchronize()  # Waits for all kernels in all streams on the MPS device to complete.
-            torch.mps.empty_cache()  # Frees all memory allocated by the MPS device.
+            # Waits for all kernels in all streams on the MPS device to complete.
+            torch.mps.synchronize()
+            # Frees all memory allocated by the MPS device.
+            torch.mps.empty_cache()
             _ = (
                 time.time() - start
             )  # Removing this line makes it fail more often. I'm looking into it.
