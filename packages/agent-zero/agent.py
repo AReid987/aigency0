@@ -1,50 +1,54 @@
-<<<<<<< HEAD
-from dataclasses import dataclass, field
-import time, importlib, inspect, os, json
-from typing import Any, Optional, Dict
-=======
 import asyncio
-from dataclasses import dataclass, field
-import time, importlib, inspect, os, json
-from typing import Any, Optional, Dict
+import importlib
+import inspect
+import json
+import os
+import time
 import uuid
->>>>>>> 83f71b59 (new remote. who dis?)
-from python.helpers import extract_tools, rate_limiter, files, errors
-from python.helpers.print_style import PrintStyle
+from dataclasses import dataclass, field
+from typing import Any, Dict, Optional
+
+import python.helpers.log as Log
 from langchain.schema import AIMessage
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.embeddings import Embeddings
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.language_models.llms import BaseLLM
-from langchain_core.embeddings import Embeddings
-<<<<<<< HEAD
-
-=======
-import python.helpers.log as Log
-from python.helpers.dirty_json import DirtyJson
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from python.helpers import errors, extract_tools, files, rate_limiter
 from python.helpers.defer import DeferredTask
+from python.helpers.dirty_json import DirtyJson
+from python.helpers.print_style import PrintStyle
+
+<< << << < HEAD
+== == == =
+>>>>>> > 83f71b59(new remote. who dis?)
+<< << << < HEAD
+
+== == == =
+
 
 class AgentContext:
 
     _contexts: dict[str, 'AgentContext'] = {}
     _counter: int = 0
-    
-    def __init__(self, config: 'AgentConfig', id:str|None = None, agent0: 'Agent|None' = None):
+
+    def __init__(self, config: 'AgentConfig', id: str | None = None, agent0: 'Agent|None' = None):
         # build context
         self.id = id or str(uuid.uuid4())
         self.config = config
         self.log = Log.Log()
         self.agent0 = agent0 or Agent(0, self.config, self)
         self.paused = False
-        self.streaming_agent: Agent|None = None
-        self.process: DeferredTask|None = None
+        self.streaming_agent: Agent | None = None
+        self.process: DeferredTask | None = None
         AgentContext._counter += 1
-        self.no = AgentContext._counter                     
+        self.no = AgentContext._counter
 
         self._contexts[self.id] = self
 
     @staticmethod
-    def get(id:str):
+    def get(id: str):
         return AgentContext._contexts.get(id, None)
 
     @staticmethod
@@ -52,9 +56,8 @@ class AgentContext:
         if not AgentContext._contexts: return None
         return list(AgentContext._contexts.values())[0]
 
-
     @staticmethod
-    def remove(id:str):
+    def remove(id: str):
         context = AgentContext._contexts.pop(id, None)
         if context and context.process: context.process.kill()
         return context
@@ -64,50 +67,54 @@ class AgentContext:
         self.log.reset()
         self.agent0 = Agent(0, self.config, self)
         self.streaming_agent = None
-        self.paused = False   
+        self.paused = False
 
-    
     def communicate(self, msg: str, broadcast_level: int = 1):
-        self.paused=False #unpause if paused
-        
+        self.paused = False  # unpause if paused
+
         if self.process and self.process.is_alive():
             if self.streaming_agent: current_agent = self.streaming_agent
             else:                     current_agent = self.agent0
 
             # set intervention messages to agent(s):
             intervention_agent = current_agent
-            while intervention_agent and broadcast_level !=0:
+            while intervention_agent and broadcast_level != 0:
                 intervention_agent.intervention_message = msg
                 broadcast_level -= 1
-                intervention_agent = intervention_agent.data.get("superior",None)
+                intervention_agent = intervention_agent.data.get(
+                    "superior", None)
         else:
             self.process = DeferredTask(self.agent0.message_loop, msg)
 
         return self.process
-            
-            
->>>>>>> 83f71b59 (new remote. who dis?)
+
+
+>>>>>> > 83f71b59(new remote. who dis?)
+
+
 @dataclass
-class AgentConfig: 
+class AgentConfig:
     chat_model: BaseChatModel | BaseLLM
     utility_model: BaseChatModel | BaseLLM
-    embeddings_model:Embeddings
-<<<<<<< HEAD
+    embeddings_model: Embeddings
+
+
+<< << << < HEAD
     memory_subdir: str = ""
-=======
+== == == =
     prompts_subdir: str = ""
     memory_subdir: str = ""
     knowledge_subdir: str = ""
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
     auto_memory_count: int = 3
     auto_memory_skip: int = 2
     rate_limit_seconds: int = 60
     rate_limit_requests: int = 15
-<<<<<<< HEAD
+<< << << < HEAD
     rate_limit_input_tokens: int = 1000000
-=======
+== == == =
     rate_limit_input_tokens: int = 0
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
     rate_limit_output_tokens: int = 0
     msgs_keep_max: int = 25
     msgs_keep_start: int = 5
@@ -117,64 +124,77 @@ class AgentConfig:
     code_exec_docker_enabled: bool = True
     code_exec_docker_name: str = "agent-zero-exe"
     code_exec_docker_image: str = "frdel/agent-zero-exe:latest"
-    code_exec_docker_ports: dict[str,int] = field(default_factory=lambda: {"22/tcp": 50022})
-    code_exec_docker_volumes: dict[str, dict[str, str]] = field(default_factory=lambda: {files.get_abs_path("work_dir"): {"bind": "/root", "mode": "rw"}})
+    code_exec_docker_ports: dict[str, int] = field(
+        default_factory=lambda: {"22/tcp": 50022})
+    code_exec_docker_volumes: dict[str, dict[str, str]] = field(
+        default_factory=lambda: {files.get_abs_path("work_dir"): {"bind": "/root", "mode": "rw"}})
     code_exec_ssh_enabled: bool = True
     code_exec_ssh_addr: str = "localhost"
     code_exec_ssh_port: int = 50022
     code_exec_ssh_user: str = "root"
     code_exec_ssh_pass: str = "toor"
     additional: Dict[str, Any] = field(default_factory=dict)
-<<<<<<< HEAD
-    
+<< << << < HEAD
+
 
 class Agent:
 
-    paused=False
-    streaming_agent=None
-    
-    def __init__(self, number:int, config: AgentConfig):
-=======
+    paused = False
+    streaming_agent = None
+
+    def __init__(self, number: int, config: AgentConfig):
+
+
+== == == =
 
 # intervention exception class - skips rest of message loop iteration
+
+
 class InterventionException(Exception):
     pass
 
 # killer exception class - not forwarded to LLM, cannot be fixed on its own, ends message loop
+
+
 class KillerException(Exception):
     pass
 
+
 class Agent:
-    
-    def __init__(self, number:int, config: AgentConfig, context: AgentContext|None = None):
->>>>>>> 83f71b59 (new remote. who dis?)
 
-        # agent config  
-        self.config = config       
+    def __init__(self, number: int, config: AgentConfig, context: AgentContext | None = None):
 
-<<<<<<< HEAD
-=======
+
+>>>>>> > 83f71b59(new remote. who dis?)
+
+        # agent config
+        self.config = config
+
+<< << << < HEAD
+== == == =
         # agent context
         self.context = context or AgentContext(config)
 
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
         # non-config vars
         self.number = number
         self.agent_name = f"Agent {self.number}"
 
-<<<<<<< HEAD
-        self.system_prompt = files.read_file("./prompts/agent.system.md", agent_name=self.agent_name)
+<< << << < HEAD
+        self.system_prompt = files.read_file(
+            "./prompts/agent.system.md", agent_name=self.agent_name)
         self.tools_prompt = files.read_file("./prompts/agent.tools.md")
 
         self.history = []
         self.last_message = ""
         self.intervention_message = ""
         self.intervention_status = False
-        self.rate_limiter = rate_limiter.RateLimiter(max_calls=self.config.rate_limit_requests,max_input_tokens=self.config.rate_limit_input_tokens,max_output_tokens=self.config.rate_limit_output_tokens,window_seconds=self.config.rate_limit_seconds)
-        self.data = {} # free data object all the tools can use
+        self.rate_limiter = rate_limiter.RateLimiter(max_calls=self.config.rate_limit_requests, max_input_tokens=self.config.rate_limit_input_tokens,
+                                                     max_output_tokens=self.config.rate_limit_output_tokens, window_seconds=self.config.rate_limit_seconds)
+        self.data = {}  # free data object all the tools can use
 
-        os.chdir(files.get_abs_path("./work_dir")) #change CWD to work_dir
-        
+        os.chdir(files.get_abs_path("./work_dir"))  # change CWD to work_dir
+
 
     def message_loop(self, msg: str):
         try:
@@ -527,8 +547,8 @@ class Agent:
 
 
     def get_tool(self, name: str, args: dict, message: str, **kwargs):
-        from python.tools.unknown import Unknown 
         from python.helpers.tool import Tool
+        from python.tools.unknown import Unknown
         
         tool_class = Unknown
         if files.exists("python/tools",f"{name}.py"): 

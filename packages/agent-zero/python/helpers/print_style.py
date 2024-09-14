@@ -1,7 +1,12 @@
-import os, webcolors, html
+import html
+import os
 import sys
 from datetime import datetime
+
+import webcolors
+
 from . import files
+
 
 class PrintStyle:
     last_endline = True
@@ -23,7 +28,8 @@ class PrintStyle:
             log_filename = datetime.now().strftime("log_%Y%m%d_%H%M%S.html")
             PrintStyle.log_file_path = os.path.join(logs_dir, log_filename)
             with open(PrintStyle.log_file_path, "w") as f:
-                f.write("<html><body style='background-color:black;font-family: Arial, Helvetica, sans-serif;'><pre>\n")
+                f.write(
+                    "<html><body style='background-color:black;font-family: Arial, Helvetica, sans-serif;'><pre>\n")
 
     def _get_rgb_color_code(self, color, is_background=False):
         try:
@@ -34,7 +40,7 @@ class PrintStyle:
             else:
                 rgb_color = webcolors.name_to_rgb(color)
                 r, g, b = rgb_color.red, rgb_color.green, rgb_color.blue
-            
+
             if is_background:
                 return f"\033[48;2;{r};{g};{b}m", f"background-color: rgb({r}, {g}, {b});"
             else:
@@ -52,7 +58,8 @@ class PrintStyle:
         if self.underline:
             start += "\033[4m"
         font_color_code, _ = self._get_rgb_color_code(self.font_color)
-        background_color_code, _ = self._get_rgb_color_code(self.background_color, True)
+        background_color_code, _ = self._get_rgb_color_code(
+            self.background_color, True)
         start += font_color_code
         start += background_color_code
         return start + text + end
@@ -66,11 +73,13 @@ class PrintStyle:
         if self.underline:
             styles.append("text-decoration: underline;")
         _, font_color_code = self._get_rgb_color_code(self.font_color)
-        _, background_color_code = self._get_rgb_color_code(self.background_color, True)
+        _, background_color_code = self._get_rgb_color_code(
+            self.background_color, True)
         styles.append(font_color_code)
         styles.append(background_color_code)
         style_attr = " ".join(styles)
-        escaped_text = html.escape(text).replace("\n", "<br>")  # Escape HTML special characters
+        escaped_text = html.escape(text).replace(
+            "\n", "<br>")  # Escape HTML special characters
         return f'<span style="{style_attr}">{escaped_text}</span>'
 
     def _add_padding_if_needed(self):
@@ -81,11 +90,14 @@ class PrintStyle:
             self.padding_added = True
 
     def _log_html(self, html):
-<<<<<<< HEAD
-        with open(PrintStyle.log_file_path, "a") as f: # type: ignore
-=======
-        with open(PrintStyle.log_file_path, "a", encoding='utf-8') as f: # type: ignore # add encoding='utf-8'
->>>>>>> 83f71b59 (new remote. who dis?)
+
+
+<< << << < HEAD
+        with open(PrintStyle.log_file_path, "a") as f:  # type: ignore
+== == == =
+        # type: ignore # add encoding='utf-8'
+        with open(PrintStyle.log_file_path, "a", encoding='utf-8') as f:
+>>>>>> > 83f71b59(new remote. who dis?)
             f.write(html)
 
     @staticmethod
@@ -131,4 +143,5 @@ class PrintStyle:
 
 # Ensure HTML file is closed properly when the program exits
 import atexit
+
 atexit.register(PrintStyle._close_html_log)

@@ -18,7 +18,9 @@ class TestInputOutput(unittest.TestCase):
         rel_fnames = ["non_existent_file.txt"]
         addable_rel_fnames = []
         commands = None
-        autocompleter = AutoCompleter(root, rel_fnames, addable_rel_fnames, commands, "utf-8")
+        autocompleter = AutoCompleter(
+            root, rel_fnames, addable_rel_fnames, commands, "utf-8"
+        )
         self.assertEqual(autocompleter.words, set(rel_fnames))
 
     def test_autocompleter_with_unicode_file(self):
@@ -28,19 +30,27 @@ class TestInputOutput(unittest.TestCase):
             rel_fnames = [fname]
             addable_rel_fnames = []
             commands = None
-            autocompleter = AutoCompleter(root, rel_fnames, addable_rel_fnames, commands, "utf-8")
+            autocompleter = AutoCompleter(
+                root, rel_fnames, addable_rel_fnames, commands, "utf-8"
+            )
             self.assertEqual(autocompleter.words, set(rel_fnames))
 
             Path(fname).write_text("def hello(): pass\n")
-            autocompleter = AutoCompleter(root, rel_fnames, addable_rel_fnames, commands, "utf-8")
+            autocompleter = AutoCompleter(
+                root, rel_fnames, addable_rel_fnames, commands, "utf-8"
+            )
             self.assertEqual(autocompleter.words, set(rel_fnames + ["hello"]))
 
             encoding = "utf-16"
-            some_content_which_will_error_if_read_with_encoding_utf8 = "ÅÍÎÏ".encode(encoding)
+            some_content_which_will_error_if_read_with_encoding_utf8 = "ÅÍÎÏ".encode(
+                encoding
+            )
             with open(fname, "wb") as f:
                 f.write(some_content_which_will_error_if_read_with_encoding_utf8)
 
-            autocompleter = AutoCompleter(root, rel_fnames, addable_rel_fnames, commands, "utf-8")
+            autocompleter = AutoCompleter(
+                root, rel_fnames, addable_rel_fnames, commands, "utf-8"
+            )
             self.assertEqual(autocompleter.words, set(rel_fnames))
 
     @patch("aider.io.PromptSession")
@@ -49,7 +59,8 @@ class TestInputOutput(unittest.TestCase):
         mock_session = MockPromptSession.return_value
         mock_session.prompt.return_value = "test input"
 
-        io = InputOutput(pretty=False)  # Windows tests throw UnicodeDecodeError
+        # Windows tests throw UnicodeDecodeError
+        io = InputOutput(pretty=False)
         root = "/"
         rel_fnames = ["existing_file.txt"]
         addable_rel_fnames = ["new_file.txt"]

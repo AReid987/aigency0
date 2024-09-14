@@ -1,32 +1,38 @@
+import json
+import os
 import re
+
 from agent import Agent
-from python.helpers.vector_db import VectorDB, Document
-<<<<<<< HEAD
-from python.helpers import files
-import os, json
-from python.helpers.tool import Tool, Response
-from python.helpers.print_style import PrintStyle
 from chromadb.errors import InvalidDimensionException
+from python.helpers import files
+from python.helpers.errors import handle_error
+from python.helpers.print_style import PrintStyle
+from python.helpers.tool import Response, Tool
+from python.helpers.vector_db import Document, VectorDB
+
+<< << << < HEAD
 
 # TODO multiple DBs at once
-db: VectorDB | None= None
+db: VectorDB | None = None
+
 
 class Memory(Tool):
-    def execute(self,**kwargs):
-=======
-import os
-from python.helpers.tool import Tool, Response
-from python.helpers.print_style import PrintStyle
-from python.helpers.errors import handle_error
+    def execute(self, **kwargs):
+
+
+== == == =
 
 # databases based on subdirectories from agent config
 dbs = {}
 
+
 class Memory(Tool):
-    async def execute(self,**kwargs):
->>>>>>> 83f71b59 (new remote. who dis?)
-        result=""
-        
+    async def execute(self, **kwargs):
+
+
+>>>>>> > 83f71b59(new remote. who dis?)
+        result = ""
+
         try:
             if "query" in kwargs:
                 threshold = float(kwargs.get("threshold", 0.1))
@@ -38,19 +44,22 @@ class Memory(Tool):
                 result = forget(self.agent, kwargs["forget"])
             elif "delete" in kwargs:
                 result = delete(self.agent, kwargs["delete"])
-<<<<<<< HEAD
+<< << << < HEAD
         except InvalidDimensionException as e:
             # hint about embedding change with existing database
-            PrintStyle.hint("If you changed your embedding model, you will need to remove contents of /memory directory.")
-=======
+            PrintStyle.hint(
+                "If you changed your embedding model, you will need to remove contents of /memory directory.")
+== == == =
         except Exception as e:
             handle_error(e)
             # hint about embedding change with existing database
-            PrintStyle.hint("If you changed your embedding model, you will need to remove contents of /memory directory.")
-            self.agent.context.log.log(type="hint", content="If you changed your embedding model, you will need to remove contents of /memory directory.")
->>>>>>> 83f71b59 (new remote. who dis?)
-            raise   
-        
+            PrintStyle.hint(
+                "If you changed your embedding model, you will need to remove contents of /memory directory.")
+            self.agent.context.log.log(
+                type="hint", content="If you changed your embedding model, you will need to remove contents of /memory directory.")
+>>>>>> > 83f71b59(new remote. who dis?)
+            raise
+
         # result = process_query(self.agent, self.args["memory"],self.args["action"], result_count=self.agent.config.auto_memory_count)
         return Response(message=result, break_loop=False)
             

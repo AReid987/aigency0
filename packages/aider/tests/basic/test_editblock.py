@@ -21,7 +21,9 @@ class TestUtils(unittest.TestCase):
         whole = "This is a sample text.\nAnother line of text.\nYet another line.\n"
         part = "This is a sample text\n"
         replace = "This is a replaced text.\n"
-        expected_output = "This is a replaced text.\nAnother line of text.\nYet another line.\n"
+        expected_output = (
+            "This is a replaced text.\nAnother line of text.\nYet another line.\n"
+        )
 
         result = eb.replace_most_similar_chunk(whole, part, replace)
         self.assertEqual(result, expected_output)
@@ -31,16 +33,18 @@ class TestUtils(unittest.TestCase):
         whole = "This is a sample text.\nAnother line of text.\nYet another line.\n"
         part = "This was a sample text.\nAnother line of txt\n"
         replace = "This is a replaced text.\nModified line of text.\n"
-        expected_output = "This is a replaced text.\nModified line of text.\nYet another line.\n"
+        expected_output = (
+            "This is a replaced text.\nModified line of text.\nYet another line.\n"
+        )
 
         result = eb.replace_most_similar_chunk(whole, part, replace)
         self.assertEqual(result, expected_output)
 
     def test_strip_quoted_wrapping(self):
-        input_text = (
-            "filename.ext\n```\nWe just want this content\nNot the filename and triple quotes\n```"
+        input_text = "filename.ext\n```\nWe just want this content\nNot the filename and triple quotes\n```"
+        expected_output = (
+            "We just want this content\nNot the filename and triple quotes\n"
         )
-        expected_output = "We just want this content\nNot the filename and triple quotes\n"
         result = eb.strip_quoted_wrapping(input_text, "filename.ext")
         self.assertEqual(result, expected_output)
 
@@ -90,7 +94,10 @@ Two
 </%s>
 
 Hope you like it!
-""" % (source, source)
+""" % (
+            source,
+            source,
+        )
 
         fence = ("<%s>" % source, "</%s>" % source)
 

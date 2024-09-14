@@ -9,6 +9,7 @@ from .wholefile_prompts import WholeFilePrompts
 
 class WholeFileCoder(Coder):
     """A coder that operates on entire files for code modifications."""
+
     edit_format = "whole"
     gpt_prompts = WholeFilePrompts()
 
@@ -18,7 +19,9 @@ class WholeFileCoder(Coder):
                 dict(role="assistant", content=self.gpt_prompts.redacted_edit_message)
             ]
         else:
-            self.cur_messages += [dict(role="assistant", content=self.partial_response_content)]
+            self.cur_messages += [
+                dict(role="assistant", content=self.partial_response_content)
+            ]
 
     def render_incremental_response(self, final):
         try:
@@ -69,7 +72,11 @@ class WholeFileCoder(Coder):
                     # Did gpt prepend a bogus dir? It especially likes to
                     # include the path/to prefix from the one-shot example in
                     # the prompt.
-                    if fname and fname not in chat_files and Path(fname).name in chat_files:
+                    if (
+                        fname
+                        and fname not in chat_files
+                        and Path(fname).name in chat_files
+                    ):
                         fname = Path(fname).name
                 if not fname:  # blank line? or ``` was on first line i==0
                     if saw_fname:

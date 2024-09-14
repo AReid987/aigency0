@@ -1,11 +1,20 @@
-from langchain.storage import InMemoryByteStore, LocalFileStore
+import json
+import os
+import uuid
+
+import faiss
 from langchain.embeddings import CacheBackedEmbeddings
-<<<<<<< HEAD
+from langchain.storage import InMemoryByteStore, LocalFileStore
 from langchain_chroma import Chroma
+from langchain_community.docstore.in_memory import InMemoryDocstore
+from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
+from python.helpers import knowledge_import
+from python.helpers.log import Log
 
 from . import files
-from langchain_core.documents import Document
-import uuid
+
+<< << << < HEAD
 
 
 class VectorDB:
@@ -14,20 +23,13 @@ class VectorDB:
         print("Initializing VectorDB...")
         self.embeddings_model = embeddings_model
 
-        em_cache = files.get_abs_path(cache_dir,"embeddings")
-        db_cache = files.get_abs_path(cache_dir,"database")
-=======
-# from langchain_chroma import Chroma
-from langchain_community.vectorstores import FAISS
-import faiss
-from langchain_community.docstore.in_memory import InMemoryDocstore
+        em_cache = files.get_abs_path(cache_dir, "embeddings")
+        db_cache = files.get_abs_path(cache_dir, "database")
 
-import os, json
-from . import files
-from langchain_core.documents import Document
-import uuid
-from python.helpers import knowledge_import
-from python.helpers.log import Log
+
+== == == =
+# from langchain_chroma import Chroma
+
 
 class VectorDB:
 
@@ -36,49 +38,52 @@ class VectorDB:
 
         print("Initializing VectorDB...")
         self.logger.log("info", content="Initializing VectorDB...")
-        
+
         self.embeddings_model = embeddings_model
 
-        self.em_dir = files.get_abs_path(memory_dir,"embeddings")
-        self.db_dir = files.get_abs_path(memory_dir,"database")
-        self.kn_dir = files.get_abs_path(knowledge_dir) if knowledge_dir else ""
->>>>>>> 83f71b59 (new remote. who dis?)
-        
+        self.em_dir = files.get_abs_path(memory_dir, "embeddings")
+        self.db_dir = files.get_abs_path(memory_dir, "database")
+        self.kn_dir = files.get_abs_path(
+            knowledge_dir) if knowledge_dir else ""
+
+
+>>>>>> > 83f71b59(new remote. who dis?)
+
         if in_memory:
             self.store = InMemoryByteStore()
         else:
-<<<<<<< HEAD
+<< << << < HEAD
             self.store = LocalFileStore(em_cache)
-=======
+== == == =
             self.store = LocalFileStore(self.em_dir)
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
 
-
-        #here we setup the embeddings model with the chosen cache storage
+        # here we setup the embeddings model with the chosen cache storage
         self.embedder = CacheBackedEmbeddings.from_bytes_store(
-            embeddings_model, 
-            self.store, 
-            namespace=getattr(embeddings_model, 'model', getattr(embeddings_model, 'model_name', "default")) )
+            embeddings_model,
+            self.store,
+            namespace=getattr(embeddings_model, 'model', getattr(embeddings_model, 'model_name', "default")))
 
-<<<<<<< HEAD
+<< << << < HEAD
 
-        self.db = Chroma(embedding_function=self.embedder,persist_directory=db_cache)
-        
-=======
+        self.db = Chroma(embedding_function=self.embedder,
+                         persist_directory=db_cache)
+
+== == == =
         # self.db = Chroma(
         #     embedding_function=self.embedder,
         #     persist_directory=db_dir)
 
-        
         # if db folder exists and is not empty:
-        if os.path.exists(self.db_dir) and files.exists(self.db_dir,"index.faiss"):
+        if os.path.exists(self.db_dir) and files.exists(self.db_dir, "index.faiss"):
             self.db = FAISS.load_local(
                 folder_path=self.db_dir,
                 embeddings=self.embedder,
                 allow_dangerous_deserialization=True
             )
         else:
-            index = faiss.IndexFlatL2(len(self.embedder.embed_query("example text")))
+            index = faiss.IndexFlatL2(
+                len(self.embedder.embed_query("example text")))
 
             self.db = FAISS(
                 embedding_function=self.embedder,
@@ -86,10 +91,10 @@ class VectorDB:
                 docstore=InMemoryDocstore(),
                 index_to_docstore_id={})
 
-        #preload knowledge files
+        # preload knowledge files
         if self.kn_dir:
             self.preload_knowledge(self.kn_dir, self.db_dir)
-        
+
 
     def preload_knowledge(self, kn_dir:str, db_dir:str):
 

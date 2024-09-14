@@ -1,17 +1,18 @@
 import json
 import logging
 import time
+from typing import Dict, List, Optional
+
 import yaml
-from typing import List, Optional, Dict
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Security
-from fastapi.security import APIKeyHeader
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Security
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from vllm import AsyncLLMEngine, AsyncEngineArgs, SamplingParams
-from vllm.utils import random_uuid
-from starlette.responses import StreamingResponse, Response
-from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi.security import APIKeyHeader
 from prometheus_client import Counter, Histogram, generate_latest
+from pydantic import BaseModel
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response, StreamingResponse
+from vllm import AsyncEngineArgs, AsyncLLMEngine, SamplingParams
+from vllm.utils import random_uuid
 
 REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP Requests')
 REQUEST_LATENCY = Histogram(
@@ -97,7 +98,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         process_time = time.time() - start_time
         logger.info(f"Path: {request.url.path} | Method: {request.method} | Status: {
-                    response.status_code} | Time: {process_time:.2f}s")
+                    response.status_code} | Time: {process_time: .2f}s")
         return response
 
 # *TODO - Finish Authentication

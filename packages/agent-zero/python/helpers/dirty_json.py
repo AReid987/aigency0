@@ -13,15 +13,16 @@ class DirtyJson:
     def parse_string(json_string):
         parser = DirtyJson()
         return parser.parse(json_string)
-    
+
     def parse(self, json_string):
         self._reset()
         self.json_string = json_string
-        self.index = self.index_of_first_brace(self.json_string) #skip any text up to the first brace
+        # skip any text up to the first brace
+        self.index = self.index_of_first_brace(self.json_string)
         self.current_char = self.json_string[self.index]
         self._parse()
         return self.result
-        
+
     def feed(self, chunk):
         self.json_string += chunk
         if not self.current_char and self.json_string:
@@ -87,7 +88,7 @@ class DirtyJson:
             self._advance(cnt)
             return True
         return False
-    
+
     def _parse_object(self):
         obj = {}
         self._advance()  # Skip opening brace
@@ -108,11 +109,11 @@ class DirtyJson:
             if self.current_char is None:
                 self.stack.pop()
                 return  # End of input reached while parsing object
-            
+
             key = self._parse_key()
             value = None
             self._skip_whitespace()
-            
+
             if self.current_char == ':':
                 self._advance()
                 value = self._parse_value()
@@ -120,9 +121,9 @@ class DirtyJson:
                 value = None  # End of input reached after key
             else:
                 value = self._parse_value()
-                
+
             self.stack[-1][key] = value
-            
+
             self._skip_whitespace()
             if self.current_char == ',':
                 self._advance()
@@ -178,7 +179,8 @@ class DirtyJson:
             if self.current_char == '\\':
                 self._advance()
                 if self.current_char in ['"', "'", '\\', '/', 'b', 'f', 'n', 'r', 't']:
-                    result += {'b': '\b', 'f': '\f', 'n': '\n', 'r': '\r', 't': '\t'}.get(self.current_char, self.current_char)
+                    result += {'b': '\b', 'f': '\f', 'n': '\n', 'r': '\r',
+                        't': '\t'}.get(self.current_char, self.current_char)
                 elif self.current_char == 'u':
                     unicode_char = ""
                     for _ in range(4):
@@ -200,7 +202,8 @@ class DirtyJson:
         quote_char = self.current_char
         self._advance(3)  # Skip first quote
         while self.current_char is not None:
-            if self.current_char == quote_char and self._peek(2) == quote_char * 2: # type: ignore
+            # type: ignore
+            if self.current_char == quote_char and self._peek(2) == quote_char * 2:
                 self._advance(3)  # Skip first quote
                 break
             result += self.current_char
@@ -250,11 +253,13 @@ class DirtyJson:
         return result.strip()
 
     def _peek(self, n):
-<<<<<<< HEAD
+
+
+<< << << < HEAD
         peek_index = self.index
-=======
+== == == =
         peek_index = self.index + 1
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
         result = ''
         for _ in range(n):
             if peek_index < len(self.json_string):

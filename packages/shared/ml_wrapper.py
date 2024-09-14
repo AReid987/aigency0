@@ -1,6 +1,6 @@
 import os
 
-if os.environ.get('USE_MLX', 'false').lower() == 'true':
+if os.environ.get("USE_MLX", "false").lower() == "true":
     import mlx.core as mx
     import mlx.nn as nn
 else:
