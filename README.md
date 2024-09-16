@@ -3,6 +3,7 @@
 =======
 # Aigency
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/034ddb8f58c24a56a366077365a7ba18)](https://app.codacy.com/gh/AReid987/aigency0?utm_source=github.com&utm_medium=referral&utm_content=AReid987/aigency0&utm_campaign=Badge_Grade)
 [![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/aigency/aigency) [![wakatime](https://wakatime.com/badge/github/AReid987/aigency0.svg)](https://wakatime.com/badge/github/AReid987/aigency0) [![codecov](https://codecov.io/gh/AReid987/aigency0/graph/badge.svg?token=ZT6JT37GV5)](https://codecov.io/gh/AReid987/aigency0) [![CodeScene Code Health](https://codescene.io/projects/58252/status-badges/code-health)](https://codescene.io/projects/58252)
 
 <i class="fa-robot"></i>
