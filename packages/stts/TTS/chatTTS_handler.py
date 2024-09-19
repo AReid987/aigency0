@@ -23,6 +23,19 @@ class ChatTTSHandler(BaseHandler):
         stream=True,
         chunk_size=512,
     ):
+        """
+        Sets up the ChatTTS model and initializes necessary parameters for text-to-speech conversion.
+        
+        Args:
+            should_listen (bool): Determines if the model should listen for input.
+            device (str): The device to run the model on. Defaults to "cuda".
+            gen_kwargs (dict): Unused parameter for generation kwargs. Defaults to an empty dictionary.
+            stream (bool): Whether to stream the audio output. Defaults to True.
+            chunk_size (int): The size of audio chunks for processing. Defaults to 512.
+        
+        Returns:
+            None: This method doesn't return anything, it initializes instance variables.
+        """
         self.should_listen = should_listen
         self.device = device
         self.model = ChatTTS.Chat()
@@ -36,11 +49,30 @@ class ChatTTSHandler(BaseHandler):
         self.warmup()
 
     def warmup(self):
+        """Warms up the model by performing an initial inference.
+        
+        This method prepares the model for subsequent operations by running a test inference
+        on a sample input. It logs the warm-up process using the logger.
+        
+        Args:
+            self: The instance of the class containing this method.
+        
+        Returns:
+            None: This method doesn't return anything.
+        """
         logger.info(f"Warming up {self.__class__.__name__}")
         _ = self.model.infer("text")
 
     def process(self, llm_sentence):
-        console.print(f"[green]ASSISTANT: {llm_sentence}")
+        """Processes a sentence using a language model and generates audio output.
+        
+        Args:
+            llm_sentence str: The input sentence to be processed by the language model.
+        
+        Returns:
+            generator: A generator that yields audio chunks as numpy arrays.
+        
+        """        console.print(f"[green]ASSISTANT: {llm_sentence}")
         if self.device == "mps":
             import time
 
