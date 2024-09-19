@@ -9,7 +9,8 @@ repository = 'your_repository_name'  # Replace with your repository name
 # Authenticate
 auth_response = requests.post(
     'https://hub.docker.com/v2/users/login/',
-    json={'username': username, 'password': password}
+    json={'username': username, 'password': password},
+    timeout=10
 )
 token = auth_response.json()['token']
 
@@ -18,7 +19,8 @@ headers = {'Authorization': f'JWT {token}'}
 # Get list of images
 response = requests.get(
     f'https://hub.docker.com/v2/repositories/{username}/{repository}/tags',
-    headers=headers
+    headers=headers,
+    timeout=10
 )
 
 tags = response.json()['results']
@@ -38,7 +40,8 @@ print(f"Identified {len(duplicates)} duplicate tags")
 for tag in duplicates:
     delete_response = requests.delete(
         f'https://hub.docker.com/v2/repositories/{username}/{repository}/tags/{tag}/',
-        headers=headers
+        headers=headers,
+        timeout=10
     )
     if delete_response.status_code == 204:
         print(f"Successfully deleted tag: {tag}")
