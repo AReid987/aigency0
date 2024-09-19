@@ -1368,57 +1368,60 @@ class Coder:
 
             self.calculate_and_show_tokens_and_cost(messages, completion)
 
-    def show_send_output(self, completion):
-        if self.verbose:
-            print(completion)
-
-        if not completion.choices:
-            self.io.tool_error(str(completion))
-            return
-
-        show_func_err = None
-        show_content_err = None
-        try:
-            if completion.choices[0].message.tool_calls:
-                self.partial_response_function_call = (
-                    completion.choices[0].message.tool_calls[0].function
-                )
-        except AttributeError as func_err:
-            show_func_err = func_err
-
-        try:
-            self.partial_response_content = completion.choices[0].message.content or ""
-        except AttributeError as content_err:
-            show_content_err = content_err
-
-        resp_hash = dict(
-            function_call=str(self.partial_response_function_call),
-            content=self.partial_response_content,
-        )
-        resp_hash = hashlib.sha1(json.dumps(resp_hash, sort_keys=True).encode())
-        self.chat_completion_response_hashes.append(resp_hash.hexdigest())
-
-        if show_func_err and show_content_err:
-            self.io.tool_error(show_func_err)
-            self.io.tool_error(show_content_err)
-            raise Exception("No data found in LLM response!")
-
-        show_resp = self.render_incremental_response(True)
-        if self.show_pretty():
-            show_resp = Markdown(
-                show_resp, style=self.assistant_output_color, code_theme=self.code_theme
+    from cryptography.hazmat.primitives import hashes
+    
+        def show_send_output(self, completion):
+            if self.verbose:
+                print(completion)
+    
+            if not completion.choices:
+                self.io.tool_error(str(completion))
+                return
+    
+            show_func_err = None
+            show_content_err = None
+            try:
+                if completion.choices[0].message.tool_calls:
+                    self.partial_response_function_call = (
+                        completion.choices[0].message.tool_calls[0].function
+                    )
+            except AttributeError as func_err:
+                show_func_err = func_err
+    
+            try:
+                self.partial_response_content = completion.choices[0].message.content or ""
+            except AttributeError as content_err:
+                show_content_err = content_err
+    
+            resp_hash = dict(
+                function_call=str(self.partial_response_function_call),
+                content=self.partial_response_content,
             )
-        else:
-            show_resp = Text(show_resp or "<no response>")
-
-        self.io.console.print(show_resp)
-
-        if (
-            hasattr(completion.choices[0], "finish_reason")
-            and completion.choices[0].finish_reason == "length"
-        ):
-            raise FinishReasonLength()
-
+            digest = hashes.Hash(hashes.SHA384())
+            digest.update(json.dumps(resp_hash, sort_keys=True).encode())
+            resp_hash_value = digest.finalize()
+            self.chat_completion_response_hashes.append(resp_hash_value.hex())
+    
+            if show_func_err and show_content_err:
+                self.io.tool_error(show_func_err)
+                self.io.tool_error(show_content_err)
+                raise Exception("No data found in LLM response!")
+    
+            show_resp = self.render_incremental_response(True)
+            if self.show_pretty():
+                show_resp = Markdown(
+                    show_resp, style=self.assistant_output_color, code_theme=self.code_theme
+                )
+            else:
+                show_resp = Text(show_resp or "<no response>")
+    
+            self.io.console.print(show_resp)
+    
+            if (
+                hasattr(completion.choices[0], "finish_reason")
+                and completion.choices[0].finish_reason == "length"
+            ):
+                raise FinishReasonLength()
     def show_send_output_stream(self, completion):
         for chunk in completion:
             if len(chunk.choices) == 0:
