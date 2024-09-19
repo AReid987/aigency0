@@ -48,6 +48,15 @@ class VADIterator:
         self.reset_states()
 
     def reset_states(self):
+        """
+        Resets the internal states of the model and related attributes.
+        
+        Args:
+            None
+        
+        Returns:
+            None: This method doesn't return anything.
+        """
         self.model.reset_states()
         self.triggered = False
         self.temp_end = 0
