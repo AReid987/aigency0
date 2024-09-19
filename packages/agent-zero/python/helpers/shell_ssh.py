@@ -1,33 +1,37 @@
-<<<<<<< HEAD
-import paramiko
-import time
+import asyncio
 import re
+import time
 from typing import Optional, Tuple
+
+import paramiko
+from python.helpers.log import Log
+from python.helpers.strings import calculate_valid_match_lengths
+
+<< << << < HEAD
+
 
 class SSHInteractiveSession:
 
     end_comment = "# @@==>> SSHInteractiveSession End-of-Command  <<==@@"
 
     ps1_label = "SSHInteractiveSession CLI>"
-    
+
     def __init__(self, hostname: str, port: int, username: str, password: str):
-=======
-import asyncio
-import paramiko
-import time
-import re
-from typing import Tuple
-from python.helpers.log import Log
-from python.helpers.strings import calculate_valid_match_lengths
+
+
+== == == =
+
 
 class SSHInteractiveSession:
 
     # end_comment = "# @@==>> SSHInteractiveSession End-of-Command  <<==@@"
     # ps1_label = "SSHInteractiveSession CLI>"
-    
+
     def __init__(self, logger: Log, hostname: str, port: int, username: str, password: str):
         self.logger = logger
->>>>>>> 83f71b59 (new remote. who dis?)
+
+
+>>>>>> > 83f71b59(new remote. who dis?)
         self.hostname = hostname
         self.port = port
         self.username = username
@@ -36,10 +40,10 @@ class SSHInteractiveSession:
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.shell = None
         self.full_output = b''
-<<<<<<< HEAD
+<< << << < HEAD
 
     def connect(self):
-=======
+== == == =
         self.last_command = b''
         self.trimmed_command_length = 0  # Initialize trimmed_command_length
 

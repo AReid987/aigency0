@@ -14,6 +14,7 @@ from .editblock_prompts import EditBlockPrompts
 
 class EditBlockCoder(Coder):
     """A coder that uses search/replace blocks for code modifications."""
+
     edit_format = "diff"
     gpt_prompts = EditBlockPrompts()
 
@@ -37,7 +38,9 @@ class EditBlockCoder(Coder):
                 # try patching any of the other files in the chat
                 for full_path in self.abs_fnames:
                     content = self.io.read_text(full_path)
-                    new_content = do_replace(full_path, content, original, updated, self.fence)
+                    new_content = do_replace(
+                        full_path, content, original, updated, self.fence
+                    )
                     if new_content:
                         break
 
@@ -109,7 +112,9 @@ def perfect_or_whitespace(whole_lines, part_lines, replace_lines):
         return res
 
     # Try being flexible about leading whitespace
-    res = replace_part_with_missing_leading_whitespace(whole_lines, part_lines, replace_lines)
+    res = replace_part_with_missing_leading_whitespace(
+        whole_lines, part_lines, replace_lines
+    )
     if res:
         return res
 
@@ -139,7 +144,9 @@ def replace_most_similar_chunk(whole, part, replace):
     # drop leading empty line, GPT sometimes adds them spuriously (issue #25)
     if len(part_lines) > 2 and not part_lines[0].strip():
         skip_blank_line_part_lines = part_lines[1:]
-        res = perfect_or_whitespace(whole_lines, skip_blank_line_part_lines, replace_lines)
+        res = perfect_or_whitespace(
+            whole_lines, skip_blank_line_part_lines, replace_lines
+        )
         if res:
             return res
 
@@ -182,7 +189,9 @@ def try_dotdotdots(whole, part, replace):
         return
 
     # Compare odd strings in part_pieces and replace_pieces
-    all_dots_match = all(part_pieces[i] == replace_pieces[i] for i in range(1, len(part_pieces), 2))
+    all_dots_match = all(
+        part_pieces[i] == replace_pieces[i] for i in range(1, len(part_pieces), 2)
+    )
 
     if not all_dots_match:
         raise ValueError("Unmatched ... in SEARCH/REPLACE block")
@@ -211,7 +220,9 @@ def try_dotdotdots(whole, part, replace):
     return whole
 
 
-def replace_part_with_missing_leading_whitespace(whole_lines, part_lines, replace_lines):
+def replace_part_with_missing_leading_whitespace(
+    whole_lines, part_lines, replace_lines
+):
     # GPT often messes up leading whitespace.
     # It usually does it uniformly across the ORIG and UPD blocks.
     # Either omitting all leading whitespace, or including only some of it.
@@ -237,8 +248,12 @@ def replace_part_with_missing_leading_whitespace(whole_lines, part_lines, replac
         if add_leading is None:
             continue
 
-        replace_lines = [add_leading + rline if rline.strip() else rline for rline in replace_lines]
-        whole_lines = whole_lines[:i] + replace_lines + whole_lines[i + num_part_lines :]
+        replace_lines = [
+            add_leading + rline if rline.strip() else rline for rline in replace_lines
+        ]
+        whole_lines = (
+            whole_lines[:i] + replace_lines + whole_lines[i + num_part_lines :]
+        )
         return "".join(whole_lines)
 
     return None

@@ -1,11 +1,11 @@
 import logging
 from time import perf_counter
 
+import numpy as np
+import torch
 from baseHandler import BaseHandler
 from funasr import AutoModel
-import numpy as np
 from rich.console import Console
-import torch
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",

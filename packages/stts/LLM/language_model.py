@@ -1,17 +1,17 @@
+import logging
 from threading import Thread
+
+import torch
+from baseHandler import BaseHandler
+from LLM.chat import Chat
+from nltk import sent_tokenize
+from rich.console import Console
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    pipeline,
     TextIteratorStreamer,
+    pipeline,
 )
-import torch
-
-from LLM.chat import Chat
-from baseHandler import BaseHandler
-from rich.console import Console
-import logging
-from nltk import sent_tokenize
 
 logger = logging.getLogger(__name__)
 

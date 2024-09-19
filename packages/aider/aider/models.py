@@ -10,11 +10,10 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
-from PIL import Image
-
 from aider import urls
 from aider.dump import dump  # noqa: F401
 from aider.llm import AIDER_APP_NAME, AIDER_SITE_URL, litellm
+from PIL import Image
 
 DEFAULT_MODEL_NAME = "gpt-4o"
 ANTHROPIC_BETA_HEADER = "max-tokens-3-5-sonnet-2024-07-15,prompt-caching-2024-07-31"
@@ -628,14 +627,17 @@ def register_models(model_settings_fnames):
             for model_settings_dict in model_settings_list:
                 model_settings = ModelSettings(**model_settings_dict)
                 existing_model_settings = next(
-                    (ms for ms in MODEL_SETTINGS if ms.name == model_settings.name), None
+                    (ms for ms in MODEL_SETTINGS if ms.name == model_settings.name),
+                    None,
                 )
 
                 if existing_model_settings:
                     MODEL_SETTINGS.remove(existing_model_settings)
                 MODEL_SETTINGS.append(model_settings)
         except Exception as e:
-            raise Exception(f"Error loading model settings from {model_settings_fname}: {e}")
+            raise Exception(
+                f"Error loading model settings from {model_settings_fname}: {e}"
+            )
         files_loaded.append(model_settings_fname)
 
     return files_loaded
@@ -692,7 +694,9 @@ def sanity_check_model(io, model):
 
     elif not model.keys_in_environment:
         show = True
-        io.tool_output(f"Model {model}: Unknown which environment variables are required.")
+        io.tool_output(
+            f"Model {model}: Unknown which environment variables are required."
+        )
 
     if not model.info:
         show = True

@@ -1,9 +1,10 @@
 import logging
-from LLM.chat import Chat
-from baseHandler import BaseHandler
-from mlx_lm import load, stream_generate, generate
-from rich.console import Console
+
 import torch
+from baseHandler import BaseHandler
+from LLM.chat import Chat
+from mlx_lm import generate, load, stream_generate
+from rich.console import Console
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +37,7 @@ class MLXLanguageModelHandler(BaseHandler):
                 raise ValueError(
                     "An initial promt needs to be specified when setting init_chat_role."
                 )
-            self.chat.init_chat(
-                {"role": init_chat_role, "content": init_chat_prompt})
+            self.chat.init_chat({"role": init_chat_role, "content": init_chat_prompt})
         self.user_role = user_role
 
         self.warmup()
@@ -51,8 +51,7 @@ class MLXLanguageModelHandler(BaseHandler):
         n_steps = 2
 
         for _ in range(n_steps):
-            prompt = self.tokenizer.apply_chat_template(
-                dummy_chat, tokenize=False)
+            prompt = self.tokenizer.apply_chat_template(dummy_chat, tokenize=False)
             generate(
                 self.model,
                 self.tokenizer,

@@ -1,34 +1,32 @@
-from utils.thread_manager import ThreadManager
-from transformers import (
-    HfArgumentParser,
-)
-from rich.console import Console
+import logging
+import os
+import sys
+from copy import copy
+from pathlib import Path
+from queue import Queue
+from sys import platform
+from threading import Event
+from typing import Optional
+
 import nltk
 import torch
+from arguments_classes.chat_tts_arguments import ChatTTSHandlerArguments
+from arguments_classes.language_model_arguments import LanguageModelHandlerArguments
 from arguments_classes.melo_tts_arguments import MeloTTSHandlerArguments
-from arguments_classes.whisper_stt_arguments import WhisperSTTHandlerArguments
-from arguments_classes.vad_arguments import VADHandlerArguments
-from arguments_classes.socket_sender_arguments import SocketSenderArguments
-from arguments_classes.socket_receiver_arguments import SocketReceiverArguments
-from arguments_classes.parler_tts_arguments import ParlerTTSHandlerArguments
-from arguments_classes.paraformer_stt_arguments import ParaformerSTTHandlerArguments
-from arguments_classes.module_arguments import ModuleArguments
 from arguments_classes.mlx_language_model_arguments import (
     MLXLanguageModelHandlerArguments,
 )
-from arguments_classes.language_model_arguments import LanguageModelHandlerArguments
-from arguments_classes.chat_tts_arguments import ChatTTSHandlerArguments
+from arguments_classes.module_arguments import ModuleArguments
+from arguments_classes.paraformer_stt_arguments import ParaformerSTTHandlerArguments
+from arguments_classes.parler_tts_arguments import ParlerTTSHandlerArguments
+from arguments_classes.socket_receiver_arguments import SocketReceiverArguments
+from arguments_classes.socket_sender_arguments import SocketSenderArguments
+from arguments_classes.vad_arguments import VADHandlerArguments
+from arguments_classes.whisper_stt_arguments import WhisperSTTHandlerArguments
+from rich.console import Console
+from transformers import HfArgumentParser
+from utils.thread_manager import ThreadManager
 from VAD.vad_handler import VADHandler
-from sys import platform
-from typing import Optional
-from threading import Event
-from queue import Queue
-from pathlib import Path
-from copy import copy
-import sys
-import os
-import logging
-
 
 # Ensure that the necessary NLTK resources are available
 try:

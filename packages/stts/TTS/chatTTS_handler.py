@@ -1,10 +1,11 @@
-import ChatTTS
 import logging
-from baseHandler import BaseHandler
+
+import ChatTTS
 import librosa
 import numpy as np
-from rich.console import Console
 import torch
+from baseHandler import BaseHandler
+from rich.console import Console
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -45,8 +46,10 @@ class ChatTTSHandler(BaseHandler):
             import time
 
             start = time.time()
-            torch.mps.synchronize()  # Waits for all kernels in all streams on the MPS device to complete.
-            torch.mps.empty_cache()  # Frees all memory allocated by the MPS device.
+            # Waits for all kernels in all streams on the MPS device to complete.
+            torch.mps.synchronize()
+            # Frees all memory allocated by the MPS device.
+            torch.mps.empty_cache()
             _ = (
                 time.time() - start
             )  # Removing this line makes it fail more often. I'm looking into it.
@@ -64,7 +67,8 @@ class ChatTTSHandler(BaseHandler):
                 audio_chunk = librosa.resample(gen[0], orig_sr=24000, target_sr=16000)
                 audio_chunk = (audio_chunk * 32768).astype(np.int16)[0]
                 while len(audio_chunk) > self.chunk_size:
-                    yield audio_chunk[: self.chunk_size]  # 返回前 chunk_size 字节的数据
+                    # 返回前 chunk_size 字节的数据
+                    yield audio_chunk[: self.chunk_size]
                     audio_chunk = audio_chunk[self.chunk_size :]  # 移除已返回的数据
                 yield np.pad(audio_chunk, (0, self.chunk_size - len(audio_chunk)))
         else:

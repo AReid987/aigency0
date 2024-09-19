@@ -1,19 +1,16 @@
+import logging
 from threading import Thread
 from time import perf_counter
-from baseHandler import BaseHandler
+
+import librosa
 import numpy as np
 import torch
-from transformers import (
-    AutoTokenizer,
-)
+from baseHandler import BaseHandler
 from parler_tts import ParlerTTSForConditionalGeneration, ParlerTTSStreamer
-import librosa
-import logging
 from rich.console import Console
+from transformers import AutoTokenizer
+from transformers.utils.import_utils import is_flash_attn_2_available
 from utils.utils import next_power_of_2
-from transformers.utils.import_utils import (
-    is_flash_attn_2_available,
-)
 
 torch._inductor.config.fx_graph_cache = True
 # mind about this parameter ! should be >= 2 * number of padded prompt sizes for TTS
