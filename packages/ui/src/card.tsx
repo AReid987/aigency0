@@ -1,3 +1,12 @@
+/**
+ * Renders a card component with a title, content, and a link.
+ * @param {Object} props - The properties for the Card component.
+ * @param {string} [props.className] - Optional CSS class name for additional styling.
+ * @param {string} props.title - The title of the card.
+ * @param {React.ReactNode} props.children - The content of the card.
+ * @param {string} props.href - The URL that the card links to.
+ * @returns {JSX.Element} A JSX element representing the card.
+ */
 export function Card({
   className,
   title,

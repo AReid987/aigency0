@@ -1,13 +1,10 @@
+import logging
 from time import perf_counter
-from transformers import (
-    AutoModelForSpeechSeq2Seq,
-    AutoProcessor,
-)
-import torch
 
+import torch
 from baseHandler import BaseHandler
 from rich.console import Console
-import logging
+from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
 
 logger = logging.getLogger(__name__)
 console = Console()
@@ -26,6 +23,19 @@ class WhisperSTTHandler(BaseHandler):
         compile_mode=None,
         gen_kwargs={},
     ):
+        """
+        Sets up the speech-to-text model and processor for transcription.
+
+        Args:
+            model_name (str): The name of the pre-trained model to use. Defaults to "distil-whisper/distil-large-v3".
+            device (str): The device to run the model on. Defaults to "cuda".
+            torch_dtype (str): The PyTorch data type to use for the model. Defaults to "float16".
+            compile_mode (str or None): The compilation mode for the model. If None, no compilation is performed. Defaults to None.
+            gen_kwargs (dict): Additional keyword arguments for model generation. Defaults to an empty dictionary.
+
+        Returns:
+            None
+        """
         self.device = device
         self.torch_dtype = getattr(torch, torch_dtype)
         self.compile_mode = compile_mode
@@ -46,6 +56,14 @@ class WhisperSTTHandler(BaseHandler):
         self.warmup()
 
     def prepare_model_inputs(self, spoken_prompt):
+        """Prepares input features for the model from a spoken prompt.
+
+        Args:
+            spoken_prompt (numpy.ndarray): The audio signal of the spoken prompt.
+
+        Returns:
+            torch.Tensor: The processed input features ready for model inference.
+        """
         input_features = self.processor(
             spoken_prompt, sampling_rate=16000, return_tensors="pt"
         ).input_features
@@ -54,6 +72,15 @@ class WhisperSTTHandler(BaseHandler):
         return input_features
 
     def warmup(self):
+        """
+        Performs a warmup of the model by running inference on dummy input data.
+
+        Args:
+            self: The instance of the class containing this method.
+
+        Returns:
+            None: This method doesn't return anything, but it logs the warmup process and timing information.
+        """
         logger.info(f"Warming up {self.__class__.__name__}")
 
         # 2 warmup steps for no compile or compile mode with CUDA graphs capture
@@ -95,6 +122,14 @@ class WhisperSTTHandler(BaseHandler):
             )
 
     def process(self, spoken_prompt):
+        """Processes spoken input and generates transcribed text.
+
+        Args:
+            spoken_prompt (numpy.ndarray): The audio input as a numpy array.
+
+        Returns:
+            str: The transcribed text from the spoken input.
+        """
         logger.debug("infering whisper...")
 
         global pipeline_start

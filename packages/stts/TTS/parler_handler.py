@@ -1,19 +1,16 @@
+import logging
 from threading import Thread
 from time import perf_counter
-from baseHandler import BaseHandler
+
+import librosa
 import numpy as np
 import torch
-from transformers import (
-    AutoTokenizer,
-)
+from baseHandler import BaseHandler
 from parler_tts import ParlerTTSForConditionalGeneration, ParlerTTSStreamer
-import librosa
-import logging
 from rich.console import Console
+from transformers import AutoTokenizer
+from transformers.utils.import_utils import is_flash_attn_2_available
 from utils.utils import next_power_of_2
-from transformers.utils.import_utils import (
-    is_flash_attn_2_available,
-)
 
 torch._inductor.config.fx_graph_cache = True
 # mind about this parameter ! should be >= 2 * number of padded prompt sizes for TTS
@@ -48,6 +45,24 @@ class ParlerTTSHandler(BaseHandler):
         play_steps_s=1,
         blocksize=512,
     ):
+        """
+        Sets up the text-to-speech model with specified parameters and configurations.
+
+        Args:
+            should_listen (bool): Flag to determine if the model should listen for input.
+            model_name (str): Name of the pre-trained model to use. Defaults to "ylacombe/parler-tts-mini-jenny-30H".
+            device (str): Device to run the model on. Defaults to "cuda".
+            torch_dtype (str): PyTorch data type to use. Defaults to "float16".
+            compile_mode (str or None): Compilation mode for the model. Defaults to None.
+            gen_kwargs (dict): Additional keyword arguments for generation. Defaults to an empty dictionary.
+            max_prompt_pad_length (int): Maximum padding length for prompts. Defaults to 8.
+            description (str): Description of the speaker's voice characteristics. Defaults to a specific description.
+            play_steps_s (float): Number of seconds to play for each step. Defaults to 1.
+            blocksize (int): Size of the audio block to process. Defaults to 512.
+
+        Returns:
+            None: This method initializes the object's attributes and sets up the model.
+        """
         self.should_listen = should_listen
         self.device = device
         self.torch_dtype = getattr(torch, torch_dtype)
@@ -86,6 +101,21 @@ class ParlerTTSHandler(BaseHandler):
         max_length_prompt=50,
         pad=False,
     ):
+        """Prepares model inputs for generating responses based on a given prompt and description.
+
+        Args:
+            prompt (str): The input prompt to be tokenized and prepared for the model.
+            max_length_prompt (int, optional): The maximum length for padding the prompt. Defaults to 50.
+            pad (bool, optional): Whether to pad the prompt to max_length_prompt. Defaults to False.
+
+        Returns:
+            dict: A dictionary containing the prepared inputs for the model, including:
+                - input_ids: Tensor of tokenized description input IDs.
+                - attention_mask: Tensor of attention mask for the description.
+                - prompt_input_ids: Tensor of tokenized prompt input IDs.
+                - prompt_attention_mask: Tensor of attention mask for the prompt.
+                - Additional generation kwargs from self.gen_kwargs.
+        """
         pad_args_prompt = (
             {"padding": "max_length", "max_length": max_length_prompt} if pad else {}
         )
@@ -113,6 +143,18 @@ class ParlerTTSHandler(BaseHandler):
         return gen_kwargs
 
     def warmup(self):
+        """Warms up the model for improved performance during inference.
+
+        This method performs a series of steps to prepare the model for efficient execution,
+        especially important for CUDA-based operations. It conducts warm-up runs with varying
+        input lengths based on the compilation mode and device type.
+
+        Args:
+            self: The instance of the class containing this method.
+
+        Returns:
+            None: This method doesn't return a value but performs warm-up operations.
+        """
         logger.info(f"Warming up {self.__class__.__name__}")
 
         if self.device == "cuda":
@@ -147,6 +189,14 @@ class ParlerTTSHandler(BaseHandler):
             )
 
     def process(self, llm_sentence):
+        """Processes a given sentence using a language model and generates audio output.
+
+        Args:
+            llm_sentence (str): The input sentence to be processed by the language model.
+
+        Returns:
+            generator: A generator that yields audio chunks as numpy arrays.
+        """
         console.print(f"[green]ASSISTANT: {llm_sentence}")
         nb_tokens = len(self.prompt_tokenizer(llm_sentence).input_ids)
 
