@@ -1,7 +1,8 @@
 import socket
 import threading
-from queue import Queue
 from dataclasses import dataclass, field
+from queue import Queue
+
 import sounddevice as sd
 from transformers import HfArgumentParser
 

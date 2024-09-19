@@ -1,19 +1,21 @@
 import select
 import subprocess
-import time
 import sys
+import time
 from typing import Optional, Tuple
+
 
 class LocalInteractiveSession:
     def __init__(self):
         self.process = None
         self.full_output = ''
 
-<<<<<<< HEAD
+
+<< << << < HEAD
     def connect(self):
-=======
+== == == =
     async def connect(self):
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
         # Start a new subprocess with the appropriate shell for the OS
         if sys.platform.startswith('win'):
             # Windows

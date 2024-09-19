@@ -44,7 +44,8 @@ class TestHelp(unittest.TestCase):
         self.assertIn(f"# Question: {question}", result)
         self.assertIn("<doc", result)
         self.assertIn("</doc>", result)
-        self.assertGreater(len(result), 100)  # Ensure we got a substantial response
+        # Ensure we got a substantial response
+        self.assertGreater(len(result), 100)
 
         # Check for some expected content (adjust based on your actual help content)
         self.assertIn("aider", result.lower())

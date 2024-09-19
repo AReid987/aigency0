@@ -2,7 +2,6 @@ import hashlib
 import json
 
 import backoff
-
 from aider.dump import dump  # noqa: F401
 from aider.llm import litellm
 
@@ -47,7 +46,13 @@ def lazy_litellm_retry_decorator(func):
 
 
 def send_completion(
-    model_name, messages, functions, stream, temperature=0, extra_headers=None, max_tokens=None
+    model_name,
+    messages,
+    functions,
+    stream,
+    temperature=0,
+    extra_headers=None,
+    max_tokens=None,
 ):
     from aider.llm import litellm
 
@@ -61,7 +66,10 @@ def send_completion(
     if functions is not None:
         function = functions[0]
         kwargs["tools"] = [dict(type="function", function=function)]
-        kwargs["tool_choice"] = {"type": "function", "function": {"name": function["name"]}}
+        kwargs["tool_choice"] = {
+            "type": "function",
+            "function": {"name": function["name"]},
+        }
     if extra_headers is not None:
         kwargs["extra_headers"] = extra_headers
     if max_tokens is not None:

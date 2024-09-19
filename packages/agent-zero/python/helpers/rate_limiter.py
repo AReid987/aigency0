@@ -2,11 +2,15 @@ import time
 from collections import deque
 from dataclasses import dataclass
 from typing import List, Tuple
-from .print_style import PrintStyle
-<<<<<<< HEAD
-=======
+
 from .log import Log
->>>>>>> 83f71b59 (new remote. who dis?)
+from .print_style import PrintStyle
+
+<< << << < HEAD
+== == == =
+
+>>>>>> > 83f71b59(new remote. who dis?)
+
 
 @dataclass
 class CallRecord:
@@ -14,13 +18,16 @@ class CallRecord:
     input_tokens: int
     output_tokens: int = 0  # Default to 0, will be set separately
 
+
 class RateLimiter:
-<<<<<<< HEAD
+
+
+<< << << < HEAD
     def __init__(self, max_calls: int, max_input_tokens: int, max_output_tokens: int, window_seconds: int = 60):
-=======
+== == == =
     def __init__(self, logger: Log, max_calls: int, max_input_tokens: int, max_output_tokens: int, window_seconds: int = 60):
         self.logger = logger
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
         self.max_calls = max_calls
         self.max_input_tokens = max_input_tokens
         self.max_output_tokens = max_output_tokens

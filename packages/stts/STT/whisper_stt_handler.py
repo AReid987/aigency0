@@ -1,13 +1,10 @@
+import logging
 from time import perf_counter
-from transformers import (
-    AutoModelForSpeechSeq2Seq,
-    AutoProcessor,
-)
-import torch
 
+import torch
 from baseHandler import BaseHandler
 from rich.console import Console
-import logging
+from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
 
 logger = logging.getLogger(__name__)
 console = Console()

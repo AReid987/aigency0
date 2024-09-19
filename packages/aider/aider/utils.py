@@ -7,7 +7,6 @@ import time
 from pathlib import Path
 
 import git
-
 from aider.dump import dump  # noqa: F401
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".webp"}
@@ -115,7 +114,9 @@ def format_messages(messages, title=None):
                 if isinstance(item, dict):
                     for key, value in item.items():
                         if isinstance(value, dict) and "url" in value:
-                            output.append(f"{role} {key.capitalize()} URL: {value['url']}")
+                            output.append(
+                                f"{role} {key.capitalize()} URL: {value['url']}"
+                            )
                         else:
                             output.append(f"{role} {key}: {value}")
                 else:
@@ -262,7 +263,11 @@ class Spinner:
         if not self.visible:
             return
 
-        print(f"\r{self.text} {next(self.spinner_chars)}\r{self.text} ", end="", flush=True)
+        print(
+            f"\r{self.text} {next(self.spinner_chars)}\r{self.text} ",
+            end="",
+            flush=True,
+        )
 
     def end(self):
         if self.visible:

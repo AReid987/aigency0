@@ -5,7 +5,6 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import git
-
 from aider.coders import Coder
 from aider.dump import dump  # noqa: F401
 from aider.io import InputOutput
@@ -263,7 +262,9 @@ class TestCoder(unittest.TestCase):
 
             for content, addable_files in test_cases:
                 with self.subTest(content=content, addable_files=addable_files):
-                    coder.get_addable_relative_files = MagicMock(return_value=set(addable_files))
+                    coder.get_addable_relative_files = MagicMock(
+                        return_value=set(addable_files)
+                    )
                     mentioned_files = coder.get_file_mentions(content)
                     expected_files = set(addable_files)
                     self.assertEqual(
@@ -387,7 +388,9 @@ class TestCoder(unittest.TestCase):
         coder.run(with_message="hi")
         self.assertEqual(len(coder.abs_fnames), 2)
 
-        some_content_which_will_error_if_read_with_encoding_utf8 = "ÅÍÎÏ".encode(encoding)
+        some_content_which_will_error_if_read_with_encoding_utf8 = "ÅÍÎÏ".encode(
+            encoding
+        )
         with open(file1, "wb") as f:
             f.write(some_content_which_will_error_if_read_with_encoding_utf8)
 
@@ -461,7 +464,9 @@ new
             fname1.write_text("ONE\n")
 
             io = InputOutput(yes=True)
-            coder = Coder.create(self.GPT35, "diff", io=io, fnames=[str(fname1), str(fname2)])
+            coder = Coder.create(
+                self.GPT35, "diff", io=io, fnames=[str(fname1), str(fname2)]
+            )
 
             def mock_send(*args, **kwargs):
                 coder.partial_response_content = f"""
@@ -484,7 +489,9 @@ TWO
                 return "commit message"
 
             coder.send = mock_send
-            coder.repo.get_commit_message = MagicMock(side_effect=mock_get_commit_message)
+            coder.repo.get_commit_message = MagicMock(
+                side_effect=mock_get_commit_message
+            )
 
             coder.run(with_message="hi")
 
@@ -537,7 +544,9 @@ three
                 saved_diffs.append(diffs)
                 return "commit message"
 
-            coder.repo.get_commit_message = MagicMock(side_effect=mock_get_commit_message)
+            coder.repo.get_commit_message = MagicMock(
+                side_effect=mock_get_commit_message
+            )
             coder.send = mock_send
 
             coder.run(with_message="hi")
@@ -615,7 +624,9 @@ two
                 saved_diffs.append(diffs)
                 return "commit message"
 
-            coder.repo.get_commit_message = MagicMock(side_effect=mock_get_commit_message)
+            coder.repo.get_commit_message = MagicMock(
+                side_effect=mock_get_commit_message
+            )
             coder.send = mock_send
 
             coder.run(with_message="hi")
@@ -672,7 +683,10 @@ two
         # Test various URL formats
         test_cases = [
             ("Check http://example.com, it's cool", "http://example.com"),
-            ("Visit https://www.example.com/page and see stuff", "https://www.example.com/page"),
+            (
+                "Visit https://www.example.com/page and see stuff",
+                "https://www.example.com/page",
+            ),
             (
                 "Go to http://subdomain.example.com:8080/path?query=value, or not",
                 "http://subdomain.example.com:8080/path?query=value",
@@ -682,13 +696,19 @@ two
                 "https://example.com/path#fragment",
             ),
             ("Look at http://localhost:3000", "http://localhost:3000"),
-            ("View https://example.com/setup#whatever", "https://example.com/setup#whatever"),
+            (
+                "View https://example.com/setup#whatever",
+                "https://example.com/setup#whatever",
+            ),
             ("Open http://127.0.0.1:8000/api/v1/", "http://127.0.0.1:8000/api/v1/"),
             (
                 "Try https://example.com/path/to/page.html?param1=value1&param2=value2",
                 "https://example.com/path/to/page.html?param1=value1&param2=value2",
             ),
-            ("Access http://user:password@example.com", "http://user:password@example.com"),
+            (
+                "Access http://user:password@example.com",
+                "http://user:password@example.com",
+            ),
             (
                 "Use https://example.com/path_(with_parentheses)",
                 "https://example.com/path_(with_parentheses)",
@@ -762,7 +782,9 @@ two
 
             # Ensure the abs_fnames contain the correct absolute path
             expected_abs_path = os.path.realpath(str(test_file))
-            coder1_abs_fnames = set(os.path.realpath(path) for path in coder1.abs_fnames)
+            coder1_abs_fnames = set(
+                os.path.realpath(path) for path in coder1.abs_fnames
+            )
             self.assertIn(expected_abs_path, coder1_abs_fnames)
             self.assertIn(expected_abs_path, coder2.abs_fnames)
 

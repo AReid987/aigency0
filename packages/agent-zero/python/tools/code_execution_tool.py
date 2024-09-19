@@ -1,51 +1,61 @@
-<<<<<<< HEAD
-from dataclasses import dataclass
-import os, json, contextlib, subprocess, ast, shlex
-from io import StringIO
-import time
-from typing import Literal
-from python.helpers import files, messages
-from agent import Agent
-=======
+import ast
 import asyncio
-from dataclasses import dataclass
+import contextlib
+import json
+import os
 import shlex
+import subprocess
 import time
->>>>>>> 83f71b59 (new remote. who dis?)
-from python.helpers.tool import Tool, Response
-from python.helpers import files
+from dataclasses import dataclass
+from io import StringIO
+from typing import Literal
+
+from agent import Agent
+from python.helpers import files, messages
+from python.helpers.docker import DockerContainerManager
 from python.helpers.print_style import PrintStyle
 from python.helpers.shell_local import LocalInteractiveSession
 from python.helpers.shell_ssh import SSHInteractiveSession
-from python.helpers.docker import DockerContainerManager
+from python.helpers.tool import Response, Tool
+
+<< << << < HEAD
+
+
+== == == =
+
+>>>>>> > 83f71b59(new remote. who dis?)
+
 
 @dataclass
 class State:
     shell: LocalInteractiveSession | SSHInteractiveSession
     docker: DockerContainerManager | None
-        
+
 
 class CodeExecution(Tool):
 
-<<<<<<< HEAD
-    def execute(self,**kwargs):
 
-        if self.agent.handle_intervention(): return Response(message="", break_loop=False)  # wait for intervention and handle it, if paused
-        
+<< << << < HEAD
+    def execute(self, **kwargs):
+
+        # wait for intervention and handle it, if paused
+        if self.agent.handle_intervention(): return Response(message="", break_loop=False)
+
         self.prepare_state()
-=======
-    async def execute(self,**kwargs):
+== == == =
+    async def execute(self, **kwargs):
 
-        await self.agent.handle_intervention() # wait for intervention and handle it, if paused
-        
+        # wait for intervention and handle it, if paused
+        await self.agent.handle_intervention()
+
         await self.prepare_state()
->>>>>>> 83f71b59 (new remote. who dis?)
+>>>>>> > 83f71b59(new remote. who dis?)
 
         # os.chdir(files.get_abs_path("./work_dir")) #change CWD to work_dir
-        
+
         runtime = self.args["runtime"].lower().strip()
         if runtime == "python":
-<<<<<<< HEAD
+<< << << < HEAD
             response = self.execute_python_code(self.args["code"])
         elif runtime == "nodejs":
             response = self.execute_nodejs_code(self.args["code"])

@@ -1,6 +1,7 @@
-import socket
-from rich.console import Console
 import logging
+import socket
+
+from rich.console import Console
 
 logger = logging.getLogger(__name__)
 
