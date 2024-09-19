@@ -4,11 +4,10 @@ import sys
 from pathlib import Path
 
 import git
-from diff_match_patch import diff_match_patch
-from tqdm import tqdm
-
 from aider.dump import dump
 from aider.utils import GitTemporaryDirectory
+from diff_match_patch import diff_match_patch
+from tqdm import tqdm
 
 
 class RelativeIndenter:
@@ -350,7 +349,8 @@ def dmp_lines_apply(texts, remap=True):
     # debug = True
 
     for t in texts:
-        assert t.endswith("\n"), t
+        if not t.endswith("\n"):
+            raise ValueError(t)
 
     search_text, replace_text, original_text = texts
 
@@ -365,7 +365,8 @@ def dmp_lines_apply(texts, remap=True):
 
     all_text = search_text + replace_text + original_text
     all_lines, _, mapping = dmp.diff_linesToChars(all_text, "")
-    assert len(all_lines) == len(all_text.splitlines())
+    if len(all_lines) != len(all_text.splitlines()):
+        raise ValueError("Mismatch in lines count")
 
     search_num = len(search_text.splitlines())
     replace_num = len(replace_text.splitlines())
@@ -375,9 +376,12 @@ def dmp_lines_apply(texts, remap=True):
     replace_lines = all_lines[search_num : search_num + replace_num]
     original_lines = all_lines[search_num + replace_num :]
 
-    assert len(search_lines) == search_num
-    assert len(replace_lines) == replace_num
-    assert len(original_lines) == original_num
+    if len(search_lines) != search_num:
+        raise ValueError("Mismatch in search lines count")
+    if len(replace_lines) != replace_num:
+        raise ValueError("Mismatch in replace lines count")
+    if len(original_lines) != original_num:
+        raise ValueError("Mismatch in original lines count")
 
     diff_lines = dmp.diff_main(search_lines, replace_lines, None)
     dmp.diff_cleanupSemantic(diff_lines)
@@ -417,7 +421,9 @@ def diff_lines(search_text, replace_text):
     dmp = diff_match_patch()
     dmp.Diff_Timeout = 5
     # dmp.Diff_EditCost = 16
-    search_lines, replace_lines, mapping = dmp.diff_linesToChars(search_text, replace_text)
+    search_lines, replace_lines, mapping = dmp.diff_linesToChars(
+        search_text, replace_text
+    )
 
     diff_lines = dmp.diff_main(search_lines, replace_lines, None)
     dmp.diff_cleanupSemantic(diff_lines)
@@ -708,7 +714,8 @@ def colorize_result(result):
         "WRONG": "\033[101;30mWRONG\033[0m",  # Red background, black text
         "fail": "\033[103;30mfail\033[0m",  # Yellow background, black text
     }
-    return colors.get(result, result)  # Default to original result if not found
+    # Default to original result if not found
+    return colors.get(result, result)
 
 
 def main(dnames):
@@ -732,14 +739,18 @@ def main(dnames):
     # Sort directories by decreasing number of 'pass' results
     pass_counts = {
         dname: sum(
-            res == "pass" for dname_result, _, res in all_results if str(dname) == str(dname_result)
+            res == "pass"
+            for dname_result, _, res in all_results
+            if str(dname) == str(dname_result)
         )
         for dname in directories
     }
     directories.sort(key=lambda dname: pass_counts[dname], reverse=True)
 
     # Create a results matrix
-    results_matrix = {dname: {method: "" for method in methods} for dname in directories}
+    results_matrix = {
+        dname: {method: "" for method in methods} for dname in directories
+    }
 
     # Populate the results matrix
     for dname, method, res in all_results:
