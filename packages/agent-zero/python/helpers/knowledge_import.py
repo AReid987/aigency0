@@ -9,6 +9,7 @@ from langchain_community.document_loaders import (
 )
 from python.helpers import files
 from python.helpers.log import Log
+from cryptography.hazmat.primitives import hashes
 
 text_loader_kwargs = {'autodetect_encoding': True}
 
@@ -22,11 +23,12 @@ class KnowledgeImport(TypedDict):
 
 
 def calculate_checksum(file_path: str) -> str:
-    hasher = hashlib.md5()
+    digest = hashes.Hash(hashes.SHA384())
     with open(file_path, 'rb') as f:
         buf = f.read()
-        hasher.update(buf)
-    return hasher.hexdigest()
+        digest.update(buf)
+    return digest.finalize().hex()
+
 
 def load_knowledge(logger: Log, knowledge_dir: str, index: Dict[str, KnowledgeImport]) -> Dict[str, KnowledgeImport]:
     knowledge_dir = files.get_abs_path(knowledge_dir)
