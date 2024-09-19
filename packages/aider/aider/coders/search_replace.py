@@ -350,7 +350,8 @@ def dmp_lines_apply(texts, remap=True):
     # debug = True
 
     for t in texts:
-        assert t.endswith("\n"), t
+        if not t.endswith("\n"):
+            raise ValueError(t)
 
     search_text, replace_text, original_text = texts
 
@@ -365,7 +366,8 @@ def dmp_lines_apply(texts, remap=True):
 
     all_text = search_text + replace_text + original_text
     all_lines, _, mapping = dmp.diff_linesToChars(all_text, "")
-    assert len(all_lines) == len(all_text.splitlines())
+    if len(all_lines) != len(all_text.splitlines()):
+        raise ValueError("Mismatch in lines count")
 
     search_num = len(search_text.splitlines())
     replace_num = len(replace_text.splitlines())
@@ -375,9 +377,12 @@ def dmp_lines_apply(texts, remap=True):
     replace_lines = all_lines[search_num : search_num + replace_num]
     original_lines = all_lines[search_num + replace_num :]
 
-    assert len(search_lines) == search_num
-    assert len(replace_lines) == replace_num
-    assert len(original_lines) == original_num
+    if len(search_lines) != search_num:
+        raise ValueError("Mismatch in search lines count")
+    if len(replace_lines) != replace_num:
+        raise ValueError("Mismatch in replace lines count")
+    if len(original_lines) != original_num:
+        raise ValueError("Mismatch in original lines count")
 
     diff_lines = dmp.diff_main(search_lines, replace_lines, None)
     dmp.diff_cleanupSemantic(diff_lines)
