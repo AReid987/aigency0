@@ -31,7 +31,15 @@ class LightningWhisperSTTHandler(BaseHandler):
         self.warmup()
 
     def warmup(self):
-        logger.info(f"Warming up {self.__class__.__name__}")
+        """
+        Performs a warmup routine for the transcription model.
+        
+        Args:
+            self: The instance of the class containing this method.
+        
+        Returns:
+            None: This method doesn't return anything explicitly.
+        """        logger.info(f"Warming up {self.__class__.__name__}")
 
         # 2 warmup steps for no compile or compile mode with CUDA graphs capture
         n_steps = 1
@@ -41,6 +49,14 @@ class LightningWhisperSTTHandler(BaseHandler):
             _ = self.model.transcribe(dummy_input)["text"].strip()
 
     def process(self, spoken_prompt):
+        """Processes spoken input and transcribes it to text using a whisper model.
+        
+        Args:
+            spoken_prompt (str): The audio input to be transcribed.
+        
+        Returns:
+            str: The transcribed text from the spoken input.
+        """
         logger.debug("infering whisper...")
 
         global pipeline_start
