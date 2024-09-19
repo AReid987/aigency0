@@ -21,9 +21,6 @@ from pathlib import Path
 from typing import List
 
 import git
-from rich.console import Console, Text
-from rich.markdown import Markdown
-
 from aider import __version__, models, prompts, urls, utils
 from aider.commands import Commands
 from aider.history import ChatSummary
@@ -35,6 +32,8 @@ from aider.repo import GitRepo
 from aider.repomap import RepoMap
 from aider.sendchat import retry_exceptions, send_completion
 from aider.utils import format_content, format_messages, is_image_file
+from rich.console import Console, Text
+from rich.markdown import Markdown
 
 from ..dump import dump  # noqa: F401
 
@@ -169,12 +168,14 @@ class Coder:
             # the system prompt.
             done_messages = from_coder.done_messages
             if edit_format != from_coder.edit_format and done_messages and summarize_from_coder:
-                done_messages = from_coder.summarizer.summarize_all(done_messages)
+                done_messages = from_coder.summarizer.summarize_all(
+                    done_messages)
 
             # Bring along context from the old Coder
             update = dict(
                 fnames=list(from_coder.abs_fnames),
-                read_only_fnames=list(from_coder.abs_read_only_fnames),  # Copy read-only files
+                # Copy read-only files
+                read_only_fnames=list(from_coder.abs_read_only_fnames),
                 done_messages=done_messages,
                 cur_messages=from_coder.cur_messages,
                 aider_commit_hashes=from_coder.aider_commit_hashes,
@@ -236,7 +237,8 @@ class Coder:
             map_tokens = self.repo_map.max_map_tokens
             if map_tokens > 0:
                 refresh = self.repo_map.refresh
-                lines.append(f"Repo-map: using {map_tokens} tokens, {refresh} refresh")
+                lines.append(
+                    f"Repo-map: using {map_tokens} tokens, {refresh} refresh")
                 max_map_tokens = 2048
                 if map_tokens > max_map_tokens:
                     lines.append(
@@ -380,7 +382,8 @@ class Coder:
             fname = str(fname.resolve())
 
             if self.repo and self.repo.ignored_file(fname):
-                self.io.tool_error(f"Skipping {fname} that matches aiderignore spec.")
+                self.io.tool_error(
+                    f"Skipping {fname} that matches aiderignore spec.")
                 continue
 
             self.abs_fnames.add(fname)
@@ -396,7 +399,8 @@ class Coder:
                 if os.path.exists(abs_fname):
                     self.abs_read_only_fnames.add(abs_fname)
                 else:
-                    self.io.tool_error(f"Error: Read-only file {fname} does not exist. Skipping.")
+                    self.io.tool_error(
+                        f"Error: Read-only file {fname} does not exist. Skipping.")
 
         if map_tokens is None:
             use_repo_map = main_model.use_repo_map
@@ -406,7 +410,8 @@ class Coder:
 
         max_inp_tokens = self.main_model.info.get("max_input_tokens") or 0
 
-        has_map_prompt = hasattr(self, "gpt_prompts") and self.gpt_prompts.repo_content_prefix
+        has_map_prompt = hasattr(
+            self, "gpt_prompts") and self.gpt_prompts.repo_content_prefix
 
         if use_repo_map and self.repo and has_map_prompt:
             self.repo_map = RepoMap(
@@ -432,7 +437,8 @@ class Coder:
         if not self.done_messages and restore_chat_history:
             history_md = self.io.read_text(self.io.chat_history_file)
             if history_md:
-                self.done_messages = utils.split_chat_history_markdown(history_md)
+                self.done_messages = utils.split_chat_history_markdown(
+                    history_md)
                 self.summarize_start()
 
         # Linting and testing
@@ -624,10 +630,12 @@ class Coder:
         mentioned_fnames = self.get_file_mentions(cur_msg_text)
         mentioned_idents = self.get_ident_mentions(cur_msg_text)
 
-        mentioned_fnames.update(self.get_ident_filename_matches(mentioned_idents))
+        mentioned_fnames.update(
+            self.get_ident_filename_matches(mentioned_idents))
 
         all_abs_files = set(self.get_all_abs_files())
-        repo_abs_read_only_fnames = set(self.abs_read_only_fnames) & all_abs_files
+        repo_abs_read_only_fnames = set(
+            self.abs_read_only_fnames) & all_abs_files
         chat_files = set(self.abs_fnames) | repo_abs_read_only_fnames
         other_files = all_abs_files - chat_files
 
@@ -721,14 +729,16 @@ class Coder:
         for fname, content in self.get_abs_fnames_content():
             if is_image_file(fname):
                 with open(fname, "rb") as image_file:
-                    encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+                    encoded_string = base64.b64encode(
+                        image_file.read()).decode("utf-8")
                 mime_type, _ = mimetypes.guess_type(fname)
                 if mime_type and mime_type.startswith("image/"):
                     image_url = f"data:{mime_type};base64,{encoded_string}"
                     rel_fname = self.get_rel_fname(fname)
                     image_messages += [
                         {"type": "text", "text": f"Image file: {rel_fname}"},
-                        {"type": "image_url", "image_url": {"url": image_url, "detail": "high"}},
+                        {"type": "image_url", "image_url": {
+                            "url": image_url, "detail": "high"}},
                     ]
 
         if not image_messages:
@@ -769,7 +779,8 @@ class Coder:
 
     def get_input(self):
         inchat_files = self.get_inchat_relative_files()
-        read_only_files = [self.get_rel_fname(fname) for fname in self.abs_read_only_fnames]
+        read_only_files = [self.get_rel_fname(
+            fname) for fname in self.abs_read_only_fnames]
         all_files = sorted(set(inchat_files + read_only_files))
         return self.io.get_input(
             self.root,
@@ -807,7 +818,8 @@ class Coder:
                 break
 
             if self.num_reflections >= self.max_reflections:
-                self.io.tool_error(f"Only {self.max_reflections} reflections allowed, stopping.")
+                self.io.tool_error(
+                    f"Only {self.max_reflections} reflections allowed, stopping.")
                 return
 
             self.num_reflections += 1
@@ -815,7 +827,8 @@ class Coder:
 
     def check_for_urls(self, inp):
         url_pattern = re.compile(r"(https?://[^\s/$.?#].[^\s]*[^\s,.])")
-        urls = list(set(url_pattern.findall(inp)))  # Use set to remove duplicates
+        # Use set to remove duplicates
+        urls = list(set(url_pattern.findall(inp)))
         added_urls = []
         for url in urls:
             if url not in self.rejected_urls:
@@ -854,7 +867,8 @@ class Coder:
 
     def summarize_worker(self):
         try:
-            self.summarized_done_messages = self.summarizer.summarize(self.done_messages)
+            self.summarized_done_messages = self.summarizer.summarize(
+                self.done_messages)
         except ValueError as err:
             self.io.tool_error(err.args[0])
 
@@ -964,7 +978,8 @@ class Coder:
                 ]
 
         if self.gpt_prompts.system_reminder:
-            main_sys += "\n" + self.fmt_system_prompt(self.gpt_prompts.system_reminder)
+            main_sys += "\n" + \
+                self.fmt_system_prompt(self.gpt_prompts.system_reminder)
 
         chunks = ChatChunks()
 
@@ -1047,7 +1062,8 @@ class Coder:
 
         self.multi_response_content = ""
         if self.show_pretty() and self.stream:
-            mdargs = dict(style=self.assistant_output_color, code_theme=self.code_theme)
+            mdargs = dict(style=self.assistant_output_color,
+                          code_theme=self.code_theme)
             self.mdstream = MarkdownStream(mdargs=mdargs)
         else:
             self.mdstream = None
@@ -1067,7 +1083,8 @@ class Coder:
                     retry_delay *= 2
                     if retry_delay > 60:
                         break
-                    self.io.tool_output(f"Retrying in {retry_delay:.1f} seconds...")
+                    self.io.tool_output(
+                        f"Retrying in {retry_delay:.1f} seconds...")
                     time.sleep(retry_delay)
                     continue
                 except KeyboardInterrupt:
@@ -1092,11 +1109,13 @@ class Coder:
                         messages[-1]["content"] = self.multi_response_content
                     else:
                         messages.append(
-                            dict(role="assistant", content=self.multi_response_content, prefix=True)
+                            dict(role="assistant",
+                                 content=self.multi_response_content, prefix=True)
                         )
                 except Exception as err:
                     self.io.tool_error(f"Unexpected error: {err}")
-                    lines = traceback.format_exception(type(err), err, err.__traceback__)
+                    lines = traceback.format_exception(
+                        type(err), err, err.__traceback__)
                     self.io.tool_error("".join(lines))
                     return
         finally:
@@ -1104,7 +1123,8 @@ class Coder:
                 self.live_incremental_response(True)
                 self.mdstream = None
 
-            self.partial_response_content = self.get_multi_response_content(True)
+            self.partial_response_content = self.get_multi_response_content(
+                True)
             self.multi_response_content = ""
 
         self.io.tool_output()
@@ -1183,7 +1203,8 @@ class Coder:
     def show_exhausted_error(self):
         output_tokens = 0
         if self.partial_response_content:
-            output_tokens = self.main_model.token_count(self.partial_response_content)
+            output_tokens = self.main_model.token_count(
+                self.partial_response_content)
         max_output_tokens = self.main_model.info.get("max_output_tokens") or 0
 
         input_tokens = self.main_model.token_count(self.format_messages())
@@ -1209,9 +1230,12 @@ class Coder:
         res.append(f"Model {self.main_model.name} has hit a token limit!")
         res.append("Token counts below are approximate.")
         res.append("")
-        res.append(f"Input tokens: ~{input_tokens:,} of {max_input_tokens:,}{inp_err}")
-        res.append(f"Output tokens: ~{output_tokens:,} of {max_output_tokens:,}{out_err}")
-        res.append(f"Total tokens: ~{total_tokens:,} of {max_input_tokens:,}{tot_err}")
+        res.append(
+            f"Input tokens: ~{input_tokens:,} of {max_input_tokens:,}{inp_err}")
+        res.append(
+            f"Output tokens: ~{output_tokens:,} of {max_output_tokens:,}{out_err}")
+        res.append(
+            f"Total tokens: ~{total_tokens:,} of {max_input_tokens:,}{tot_err}")
 
         if output_tokens >= max_output_tokens:
             res.append("")
@@ -1227,7 +1251,8 @@ class Coder:
             res.append("")
             res.append("To reduce input tokens:")
             res.append("- Use /tokens to see token usage.")
-            res.append("- Use /drop to remove unneeded files from the chat session.")
+            res.append(
+                "- Use /drop to remove unneeded files from the chat session.")
             res.append("- Use /clear to clear the chat history.")
             res.append("- Break your code into smaller source files.")
 
@@ -1262,7 +1287,8 @@ class Coder:
 
     def update_cur_messages(self, edited):
         if self.partial_response_content:
-            self.cur_messages += [dict(role="assistant", content=self.partial_response_content)]
+            self.cur_messages += [dict(role="assistant",
+                                       content=self.partial_response_content)]
         if self.partial_response_function_call:
             self.cur_messages += [
                 dict(
@@ -1369,15 +1395,15 @@ class Coder:
             self.calculate_and_show_tokens_and_cost(messages, completion)
 
     from cryptography.hazmat.primitives import hashes
-    
-        def show_send_output(self, completion):
-            if self.verbose:
+
+      def show_send_output(self, completion):
+           if self.verbose:
                 print(completion)
-    
+
             if not completion.choices:
                 self.io.tool_error(str(completion))
                 return
-    
+
             show_func_err = None
             show_content_err = None
             try:
@@ -1387,12 +1413,12 @@ class Coder:
                     )
             except AttributeError as func_err:
                 show_func_err = func_err
-    
+
             try:
                 self.partial_response_content = completion.choices[0].message.content or ""
             except AttributeError as content_err:
                 show_content_err = content_err
-    
+
             resp_hash = dict(
                 function_call=str(self.partial_response_function_call),
                 content=self.partial_response_content,
@@ -1401,12 +1427,12 @@ class Coder:
             digest.update(json.dumps(resp_hash, sort_keys=True).encode())
             resp_hash_value = digest.finalize()
             self.chat_completion_response_hashes.append(resp_hash_value.hex())
-    
+
             if show_func_err and show_content_err:
                 self.io.tool_error(show_func_err)
                 self.io.tool_error(show_content_err)
                 raise Exception("No data found in LLM response!")
-    
+
             show_resp = self.render_incremental_response(True)
             if self.show_pretty():
                 show_resp = Markdown(
@@ -1414,14 +1440,15 @@ class Coder:
                 )
             else:
                 show_resp = Text(show_resp or "<no response>")
-    
+
             self.io.console.print(show_resp)
-    
+
             if (
                 hasattr(completion.choices[0], "finish_reason")
                 and completion.choices[0].finish_reason == "length"
             ):
                 raise FinishReasonLength()
+
     def show_send_output_stream(self, completion):
         for chunk in completion:
             if len(chunk.choices) == 0:
@@ -1486,7 +1513,8 @@ class Coder:
             )
         else:
             prompt_tokens = self.main_model.token_count(messages)
-            completion_tokens = self.main_model.token_count(self.partial_response_content)
+            completion_tokens = self.main_model.token_count(
+                self.partial_response_content)
 
         self.message_tokens_sent += prompt_tokens
         self.message_tokens_received += completion_tokens
@@ -1503,9 +1531,11 @@ class Coder:
             )
 
         if self.main_model.info.get("input_cost_per_token"):
-            cost += prompt_tokens * self.main_model.info.get("input_cost_per_token")
+            cost += prompt_tokens * \
+                self.main_model.info.get("input_cost_per_token")
             if self.main_model.info.get("output_cost_per_token"):
-                cost += completion_tokens * self.main_model.info.get("output_cost_per_token")
+                cost += completion_tokens * \
+                    self.main_model.info.get("output_cost_per_token")
             self.total_cost += cost
             self.message_cost += cost
 
@@ -1571,7 +1601,8 @@ class Coder:
         return files
 
     def get_last_modified(self):
-        files = [Path(fn) for fn in self.get_all_abs_files() if Path(fn).exists()]
+        files = [Path(fn)
+                 for fn in self.get_all_abs_files() if Path(fn).exists()]
         if not files:
             return 0
         return max(path.stat().st_mtime for path in files)
@@ -1579,7 +1610,8 @@ class Coder:
     def get_addable_relative_files(self):
         all_files = set(self.get_all_relative_files())
         inchat_files = set(self.get_inchat_relative_files())
-        read_only_files = set(self.get_rel_fname(fname) for fname in self.abs_read_only_fnames)
+        read_only_files = set(self.get_rel_fname(fname)
+                              for fname in self.abs_read_only_fnames)
         return all_files - inchat_files - read_only_files
 
     def check_for_dirty_commit(self, path):
@@ -1666,7 +1698,8 @@ class Coder:
         if tokens < warn_number_of_tokens:
             return
 
-        self.io.tool_error("Warning: it's best to only add files that need changes to the chat.")
+        self.io.tool_error(
+            "Warning: it's best to only add files that need changes to the chat.")
         self.io.tool_error(urls.edit_errors)
         self.warning_given = True
 
@@ -1728,7 +1761,8 @@ class Coder:
 
         for path in edited:
             if self.dry_run:
-                self.io.tool_output(f"Did not apply edit to {path} (--dry-run)")
+                self.io.tool_output(
+                    f"Did not apply edit to {path} (--dry-run)")
             else:
                 self.io.tool_output(f"Applied edit to {path}")
 
@@ -1767,13 +1801,15 @@ class Coder:
         context = ""
         if history:
             for msg in history:
-                context += "\n" + msg["role"].upper() + ": " + msg["content"] + "\n"
+                context += "\n" + msg["role"].upper() + \
+                    ": " + msg["content"] + "\n"
 
         return context
 
     def auto_commit(self, edited):
         context = self.get_context_from_history(self.cur_messages)
-        res = self.repo.commit(fnames=edited, context=context, aider_edits=True)
+        res = self.repo.commit(
+            fnames=edited, context=context, aider_edits=True)
         if res:
             self.show_auto_commit_outcome(res)
             commit_hash, commit_message = res
@@ -1797,7 +1833,8 @@ class Coder:
         if not self.commit_before_message:
             return
         if self.commit_before_message[-1] != self.repo.get_head():
-            self.io.tool_output("You can use /undo to undo and discard each aider commit.")
+            self.io.tool_output(
+                "You can use /undo to undo and discard each aider commit.")
 
     def dirty_commit(self):
         if not self.need_commit_before_edits:
