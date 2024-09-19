@@ -1,19 +1,16 @@
+import logging
 from threading import Thread
 from time import perf_counter
-from baseHandler import BaseHandler
+
+import librosa
 import numpy as np
 import torch
-from transformers import (
-    AutoTokenizer,
-)
+from baseHandler import BaseHandler
 from parler_tts import ParlerTTSForConditionalGeneration, ParlerTTSStreamer
-import librosa
-import logging
 from rich.console import Console
+from transformers import AutoTokenizer
+from transformers.utils.import_utils import is_flash_attn_2_available
 from utils.utils import next_power_of_2
-from transformers.utils.import_utils import (
-    is_flash_attn_2_available,
-)
 
 torch._inductor.config.fx_graph_cache = True
 # mind about this parameter ! should be >= 2 * number of padded prompt sizes for TTS
@@ -50,7 +47,7 @@ class ParlerTTSHandler(BaseHandler):
     ):
         """
         Sets up the text-to-speech model with specified parameters and configurations.
-        
+
         Args:
             should_listen (bool): Flag to determine if the model should listen for input.
             model_name (str): Name of the pre-trained model to use. Defaults to "ylacombe/parler-tts-mini-jenny-30H".
@@ -62,7 +59,7 @@ class ParlerTTSHandler(BaseHandler):
             description (str): Description of the speaker's voice characteristics. Defaults to a specific description.
             play_steps_s (float): Number of seconds to play for each step. Defaults to 1.
             blocksize (int): Size of the audio block to process. Defaults to 512.
-        
+
         Returns:
             None: This method initializes the object's attributes and sets up the model.
         """
@@ -105,12 +102,12 @@ class ParlerTTSHandler(BaseHandler):
         pad=False,
     ):
         """Prepares model inputs for generating responses based on a given prompt and description.
-        
+
         Args:
             prompt (str): The input prompt to be tokenized and prepared for the model.
             max_length_prompt (int, optional): The maximum length for padding the prompt. Defaults to 50.
             pad (bool, optional): Whether to pad the prompt to max_length_prompt. Defaults to False.
-        
+
         Returns:
             dict: A dictionary containing the prepared inputs for the model, including:
                 - input_ids: Tensor of tokenized description input IDs.
@@ -147,14 +144,14 @@ class ParlerTTSHandler(BaseHandler):
 
     def warmup(self):
         """Warms up the model for improved performance during inference.
-        
+
         This method performs a series of steps to prepare the model for efficient execution,
         especially important for CUDA-based operations. It conducts warm-up runs with varying
         input lengths based on the compilation mode and device type.
-        
+
         Args:
             self: The instance of the class containing this method.
-        
+
         Returns:
             None: This method doesn't return a value but performs warm-up operations.
         """
@@ -193,10 +190,10 @@ class ParlerTTSHandler(BaseHandler):
 
     def process(self, llm_sentence):
         """Processes a given sentence using a language model and generates audio output.
-        
+
         Args:
             llm_sentence (str): The input sentence to be processed by the language model.
-        
+
         Returns:
             generator: A generator that yields audio chunks as numpy arrays.
         """

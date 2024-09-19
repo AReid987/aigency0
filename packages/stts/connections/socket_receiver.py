@@ -1,6 +1,7 @@
-import socket
-from rich.console import Console
 import logging
+import socket
+
+from rich.console import Console
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ class SocketReceiver:
         chunk_size=1024,
     ):
         """Initialize a new instance of the class.
-        
+
         Args:
             stop_event (Event): An event to signal when to stop the process.
             queue_out (Queue): A queue for output communication.
@@ -30,7 +31,7 @@ class SocketReceiver:
             host (str, optional): The host address to bind to. Defaults to "0.0.0.0".
             port (int, optional): The port number to listen on. Defaults to 12345.
             chunk_size (int, optional): The size of data chunks to process. Defaults to 1024.
-        
+
         Returns:
             None: This method initializes the object and doesn't return anything.
         """
@@ -43,11 +44,11 @@ class SocketReceiver:
 
     def receive_full_chunk(self, conn, chunk_size):
         """Receives a full chunk of data from a connection.
-        
+
         Args:
             conn (socket.socket): The connection socket to receive data from.
             chunk_size (int): The expected size of the chunk to receive.
-        
+
         Returns:
             bytes or None: The received data as bytes if successful, or None if the connection closed before receiving the full chunk.
         """

@@ -1,12 +1,11 @@
-from VAD.vad_iterator import VADIterator
-from baseHandler import BaseHandler
+import logging
+
 import numpy as np
 import torch
+from baseHandler import BaseHandler
 from rich.console import Console
-
 from utils.utils import int2float
-
-import logging
+from VAD.vad_iterator import VADIterator
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +29,7 @@ class VADHandler(BaseHandler):
         speech_pad_ms=30,
     ):
         """Sets up the Voice Activity Detection (VAD) system.
-        
+
         Args:
             should_listen (bool): Flag to determine if the system should listen.
             thresh (float): Threshold for VAD detection. Default is 0.3.
@@ -39,7 +38,7 @@ class VADHandler(BaseHandler):
             min_speech_ms (int): Minimum duration of speech in milliseconds. Default is 500.
             max_speech_ms (float): Maximum duration of speech in milliseconds. Default is infinity.
             speech_pad_ms (int): Padding duration for speech in milliseconds. Default is 30.
-        
+
         Returns:
             None: This method doesn't return anything, it initializes the VAD system.
         """
@@ -59,12 +58,12 @@ class VADHandler(BaseHandler):
 
     def process(self, audio_chunk):
         """Process an audio chunk for voice activity detection.
-        
+
         Args:
             audio_chunk (bytes): The input audio chunk to be processed.
-        
+
         Returns:
-            numpy.ndarray or None: If valid speech is detected, returns the processed audio array. 
+            numpy.ndarray or None: If valid speech is detected, returns the processed audio array.
             Otherwise, returns None.
         """
         audio_int16 = np.frombuffer(audio_chunk, dtype=np.int16)

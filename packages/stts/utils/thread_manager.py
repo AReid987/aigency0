@@ -8,10 +8,10 @@ class ThreadManager:
 
     def __init__(self, handlers):
         """Initialize the ThreadManager with a list of handlers.
-        
+
         Args:
             handlers (list): A list of handler objects to be managed by the ThreadManager.
-        
+
         Returns:
             None: This method doesn't return anything.
         """        self.handlers = handlers
@@ -25,13 +25,14 @@ class ThreadManager:
     Returns:
         None: This method doesn't return anything.
     """
+
     def start(self):
         """
         Starts the execution of all registered handlers in separate threads.
-        
+
         Args:
             self: The instance of the class containing this method.
-        
+
         Returns:
             None: This method doesn't return anything.
         """

@@ -1,11 +1,11 @@
 import logging
 from time import perf_counter
 
+import numpy as np
+import torch
 from baseHandler import BaseHandler
 from funasr import AutoModel
-import numpy as np
 from rich.console import Console
-import torch
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -29,12 +29,12 @@ class ParaformerSTTHandler(BaseHandler):
         gen_kwargs={},
     ):
         """Initializes and sets up the Paraformer model for speech recognition.
-        
+
         Args:
             model_name (str): The name of the model to use. Defaults to "paraformer-zh".
             device (str): The device to run the model on. Defaults to "cuda".
             gen_kwargs (dict): Additional keyword arguments for model generation. Defaults to an empty dictionary.
-        
+
         Returns:
             None: This method doesn't return anything, it sets up the model internally.
         """
@@ -47,10 +47,10 @@ class ParaformerSTTHandler(BaseHandler):
 
     def warmup(self):
         """Performs a warmup routine for the model.
-        
+
         Args:
             self: The instance of the class containing this method.
-        
+
         Returns:
             None: This method doesn't return anything explicitly.
         """
@@ -60,7 +60,8 @@ class ParaformerSTTHandler(BaseHandler):
         n_steps = 1
         dummy_input = np.array([0] * 512, dtype=np.float32)
         for _ in range(n_steps):
-            _ = self.model.generate(dummy_input)[0]["text"].strip().replace(" ", "")
+            _ = self.model.generate(dummy_input)[
+                0]["text"].strip().replace(" ", "")
 
     def process(self, spoken_prompt):
         ```
@@ -78,7 +79,8 @@ class ParaformerSTTHandler(BaseHandler):
         pipeline_start = perf_counter()
 
         pred_text = (
-            self.model.generate(spoken_prompt)[0]["text"].strip().replace(" ", "")
+            self.model.generate(spoken_prompt)[
+                0]["text"].strip().replace(" ", "")
         )
         torch.mps.empty_cache()
 

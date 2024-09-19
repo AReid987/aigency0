@@ -1,10 +1,11 @@
 import logging
 from time import perf_counter
+
+import numpy as np
+import torch
 from baseHandler import BaseHandler
 from lightning_whisper_mlx import LightningWhisperMLX
-import numpy as np
 from rich.console import Console
-import torch
 
 logger = logging.getLogger(__name__)
 
@@ -27,16 +28,17 @@ class LightningWhisperSTTHandler(BaseHandler):
         if len(model_name.split("/")) > 1:
             model_name = model_name.split("/")[-1]
         self.device = device
-        self.model = LightningWhisperMLX(model=model_name, batch_size=6, quant=None)
+        self.model = LightningWhisperMLX(
+            model=model_name, batch_size=6, quant=None)
         self.warmup()
 
     def warmup(self):
         """
         Performs a warmup routine for the transcription model.
-        
+
         Args:
             self: The instance of the class containing this method.
-        
+
         Returns:
             None: This method doesn't return anything explicitly.
         """        logger.info(f"Warming up {self.__class__.__name__}")
@@ -50,10 +52,10 @@ class LightningWhisperSTTHandler(BaseHandler):
 
     def process(self, spoken_prompt):
         """Processes spoken input and transcribes it to text using a whisper model.
-        
+
         Args:
             spoken_prompt (str): The audio input to be transcribed.
-        
+
         Returns:
             str: The transcribed text from the spoken input.
         """
