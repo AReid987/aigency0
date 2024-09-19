@@ -21,6 +21,20 @@ class MeloTTSHandler(BaseHandler):
         gen_kwargs={},  # Unused
         blocksize=512,
     ):
+        """
+        Sets up the text-to-speech model with specified parameters.
+        
+        Args:
+            should_listen (bool): Flag to indicate if the model should listen for input.
+            device (str): The device to run the model on. Default is "mps".
+            language (str): The language model to use. Default is "EN_NEWEST".
+            speaker_to_id (str): The speaker ID to use. Default is "EN-Newest".
+            gen_kwargs (dict): Unused parameter for generation kwargs. Default is an empty dict.
+            blocksize (int): The block size for processing. Default is 512.
+        
+        Returns:
+            None: This method doesn't return anything, it sets up instance variables.
+        """
         self.should_listen = should_listen
         self.device = device
         self.model = TTS(language=language, device=device)
@@ -29,10 +43,27 @@ class MeloTTSHandler(BaseHandler):
         self.warmup()
 
     def warmup(self):
+        """
+        Warms up the text-to-speech model by performing a sample conversion.
+        
+        Args:
+            self: The instance of the class containing this method.
+        
+        Returns:
+            None: This method doesn't return anything explicitly.
+        """
         logger.info(f"Warming up {self.__class__.__name__}")
         _ = self.model.tts_to_file("text", self.speaker_id, quiet=True)
 
     def process(self, llm_sentence):
+        """Processes a sentence using a text-to-speech model and yields audio chunks.
+        
+        Args:
+            llm_sentence (str): The sentence to be converted to speech.
+        
+        Returns:
+            Generator[np.ndarray]: A generator yielding audio chunks as numpy arrays.
+        """
         console.print(f"[green]ASSISTANT: {llm_sentence}")
         if self.device == "mps":
             import time
